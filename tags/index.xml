@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Bruce Wu Blog</title>
+    <title>Tags on Bruce Wu&#39;s Blog</title>
     <link>https://bruceewue.github.io/tags/</link>
-    <description>Recent content in Tags on Bruce Wu Blog</description>
+    <description>Recent content in Tags on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Wed, 02 Sep 2020 10:07:47 +0800</lastBuildDate>
@@ -17,15 +17,6 @@
       <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
       
       <guid>https://bruceewue.github.io/tags/article/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>https://bruceewue.github.io/tags/python/</link>
-      <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/python/</guid>
       <description></description>
     </item>
     
@@ -62,6 +53,15 @@
       <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/tags/photos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://bruceewue.github.io/tags/python/</link>
+      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/python/</guid>
       <description></description>
     </item>
     

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Article on Bruce Wu Blog</title>
+    <title>Article on Bruce Wu&#39;s Blog</title>
     <link>https://bruceewue.github.io/tags/article/</link>
-    <description>Recent content in Article on Bruce Wu Blog</description>
+    <description>Recent content in Article on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Wed, 02 Sep 2020 10:07:47 +0800</lastBuildDate>
@@ -12,14 +12,14 @@
     
     
     <item>
-      <title>Say hello to you</title>
-      <link>https://bruceewue.github.io/blog/bruce%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
+      <title>Markdown test</title>
+      <link>https://bruceewue.github.io/blog/markdown_test/</link>
       <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/bruce%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
+      <guid>https://bruceewue.github.io/blog/markdown_test/</guid>
       <description>Hello
 以下為markdown練習範例
-空一行才是換行 粗體Bruceee
+空一行才是換行 粗體Bruce
 大標題 二級標題 六級標題+斜體  有序1  四個空格內縮   有序2 有序3   無序1  四個空格內縮   無序2   這是引用，通常放在文章前當作引言</description>
     </item>
     
