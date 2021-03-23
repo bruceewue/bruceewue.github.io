@@ -6,10 +6,19 @@
     <description>Recent content in Categories on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 02 Sep 2020 10:07:47 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 10 Jan 2021 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Learning note</title>
+      <link>https://bruceewue.github.io/categories/learning-note/</link>
+      <pubDate>Sun, 10 Jan 2021 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/categories/learning-note/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Others</title>

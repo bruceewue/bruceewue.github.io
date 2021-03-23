@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dashboard on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/tags/dashboard/</link>
+    <description>Recent content in Dashboard on Bruce Wu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Sun, 10 Jan 2021 10:07:47 +0600</lastBuildDate>
+    
+	<atom:link href="https://bruceewue.github.io/tags/dashboard/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Create COVID-19 Dashboard by Data studio</title>
+      <link>https://bruceewue.github.io/blog/data_studio/</link>
+      <pubDate>Sun, 10 Jan 2021 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/data_studio/</guid>
+      <description>動機 疫情持續了一段時間，網上能看見各式儀表板，今天就試著來自己創建一個吧。
+方法 透過將Python爬蟲程式部署至GCP，定期爬取疫情相關資料，再由Data studio創建儀表板直接讀取GCP中的DB 即可製作即時資訊儀表板
+實際儀表板如下 </description>
+    </item>
+    
+  </channel>
+</rss>
