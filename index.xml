@@ -6,10 +6,22 @@
     <description>Recent content on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 10 Mar 2021 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Fri, 03 Dec 2021 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>ML model deployment</title>
+      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
+      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
+      <description>在學習了眾多機器學習、資料分析等方法後不禁思考:下一步呢? 該如何讓建立的模型或分析的成果能實際落地提供使用?
+本篇以天池競賽中的製造業數據為例，創建機器學習系統，包含模型建置、API服務部署及系統監控，並結合CICD將流程自動化。
+Data source 本數據集是關於化工連續製程的數據，目標是希望預測Yield，屬於迴歸問題(regression)，本案例中模擬從AWS S3取得資料
+Digital Manufacturing Algorithm Competition of JinNan Tianjin</description>
+    </item>
     
     <item>
       <title>Create COVID-19 Dashboard by Data studio</title>
@@ -20,28 +32,17 @@
       <description>動機 疫情持續了一段時間，網上能看見各式儀表板，今天就試著來自己創建一個吧。
 方法 透過將Python爬蟲程式部署至GCP，定期爬取疫情相關資料，再由Data studio創建儀表板直接讀取GCP中的DB 即可製作即時資訊儀表板
 Photo Credit:Google
-實際儀表板如下  為了完整呈現，建議點擊右下角在google中開啟  .</description>
+實際儀表板如下  為了完整呈現，建議點擊右下角&amp;quot;Google數據分析&amp;rdquo;  .</description>
     </item>
     
     <item>
       <title>Markdown test</title>
       <link>https://bruceewue.github.io/blog/markdown_test/</link>
-      <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
+      <pubDate>Wed, 02 Sep 2020 21:07:47 +0800</pubDate>
       
       <guid>https://bruceewue.github.io/blog/markdown_test/</guid>
-      <description>Hello
-以下為markdown練習範例
-空一行才是換行 粗體Bruce
-大標題 二級標題 六級標題+斜體  有序1  四個空格內縮   有序2 有序3   無序1  四個空格內縮   無序2   這是引用，通常放在文章前當作引言</description>
-    </item>
-    
-    <item>
-      <title>How To Use Checklists</title>
-      <link>https://bruceewue.github.io/blog/post-13/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/post-13/</guid>
-      <description>Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Emphasis Emphasis, aka italics, with asterisks or underscores.</description>
+      <description>Markdown Example
+Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Emphasis Emphasis, aka italics, with asterisks or underscores.</description>
     </item>
     
   </channel>

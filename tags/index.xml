@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 10 Mar 2021 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Fri, 03 Dec 2021 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MLOps</title>
+      <link>https://bruceewue.github.io/tags/mlops/</link>
+      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/mlops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://bruceewue.github.io/tags/python/</link>
+      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/python/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Dashboard</title>
@@ -30,56 +48,20 @@
     </item>
     
     <item>
-      <title>Article</title>
-      <link>https://bruceewue.github.io/tags/article/</link>
-      <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
+      <title>Hugo</title>
+      <link>https://bruceewue.github.io/tags/hugo/</link>
+      <pubDate>Wed, 02 Sep 2020 21:07:47 +0800</pubDate>
       
-      <guid>https://bruceewue.github.io/tags/article/</guid>
+      <guid>https://bruceewue.github.io/tags/hugo/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Game</title>
-      <link>https://bruceewue.github.io/tags/game/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
+      <title>Markdown</title>
+      <link>https://bruceewue.github.io/tags/markdown/</link>
+      <pubDate>Wed, 02 Sep 2020 21:07:47 +0800</pubDate>
       
-      <guid>https://bruceewue.github.io/tags/game/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>HTML</title>
-      <link>https://bruceewue.github.io/tags/html/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/html/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>New</title>
-      <link>https://bruceewue.github.io/tags/new/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/new/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Photos</title>
-      <link>https://bruceewue.github.io/tags/photos/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/photos/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Python</title>
-      <link>https://bruceewue.github.io/tags/python/</link>
-      <pubDate>Tue, 29 Oct 2019 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/python/</guid>
+      <guid>https://bruceewue.github.io/tags/markdown/</guid>
       <description></description>
     </item>
     

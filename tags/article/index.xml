@@ -6,7 +6,7 @@
     <description>Recent content in Article on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 02 Sep 2020 10:07:47 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2020 21:07:47 +0800</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/article/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,13 +14,11 @@
     <item>
       <title>Markdown test</title>
       <link>https://bruceewue.github.io/blog/markdown_test/</link>
-      <pubDate>Wed, 02 Sep 2020 10:07:47 +0800</pubDate>
+      <pubDate>Wed, 02 Sep 2020 21:07:47 +0800</pubDate>
       
       <guid>https://bruceewue.github.io/blog/markdown_test/</guid>
-      <description>Hello
-以下為markdown練習範例
-空一行才是換行 粗體Bruce
-大標題 二級標題 六級標題+斜體  有序1  四個空格內縮   有序2 有序3   無序1  四個空格內縮   無序2   這是引用，通常放在文章前當作引言</description>
+      <description>Markdown Example
+Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Emphasis Emphasis, aka italics, with asterisks or underscores.</description>
     </item>
     
   </channel>

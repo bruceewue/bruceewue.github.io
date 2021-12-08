@@ -109,12 +109,38 @@
         <img src="https://bruceewue.github.io/images/post/post-1.jpg" class="img-fluid w-100 mb-4" alt="Markdown test">
         
         <div class="content mb-5">
-          <p>Hello</p>
-<p>以下為markdown練習範例</p>
-<p>空一行才是換行 <strong>粗體Bruce</strong></p>
-<h1 id="大標題">大標題</h1>
-<h2 id="二級標題">二級標題</h2>
-<h6 id="六級標題斜體"><em>六級標題+斜體</em></h6>
+          <p>Markdown Example</p>
+<h1 id="heading-1">Heading 1</h1>
+<h2 id="heading-2">Heading 2</h2>
+<h3 id="heading-3">Heading 3</h3>
+<h4 id="heading-4">Heading 4</h4>
+<h5 id="heading-5">Heading 5</h5>
+<h6 id="heading-6">Heading 6</h6>
+<h5 id="emphasis">Emphasis</h5>
+<p>Emphasis, aka italics, with <em>asterisks</em> or <em>underscores</em>.</p>
+<p>Strong emphasis, aka bold, with <strong>asterisks</strong> or <strong>underscores</strong>.</p>
+<p>Combined emphasis with <strong>asterisks and <em>underscores</em></strong>.</p>
+<p>Strikethrough uses two tildes. <del>Scratch this.</del></p>
+<!-- raw HTML omitted -->
+<h5 id="link">Link</h5>
+<p><a href="https://www.google.com">I&rsquo;m an inline-style link</a></p>
+<p><a href="https://www.google.com" title="Google's Homepage">I&rsquo;m an inline-style link with title</a></p>
+<p><a href="https://www.mozilla.org">I&rsquo;m a reference-style link</a></p>
+<p><img src="/images/gallery/9.jpg" alt="I&rsquo;m a relative reference to a repository file"></p>
+<p><a href="http://slashdot.org">You can use numbers for reference-style link definitions</a></p>
+<p>Or leave it empty and use the <a href="http://www.reddit.com">link text itself</a>.</p>
+<p>URLs and URLs in angle brackets will automatically get turned into links. 
+<a href="http://www.example.com">http://www.example.com</a> or <a href="http://www.example.com">http://www.example.com</a> and sometimes 
+example.com (but not on Github, for example).</p>
+<p>Some text to show that the reference links can follow later.</p>
+<figure>
+    <img src="/images/gallery/9.jpg"/> <figcaption>
+            <h4>Steve Francia</h4><p>
+                    <a href="https://www.google.com">test</a></p>
+        </figcaption>
+</figure>
+
+<h5 id="list">List</h5>
 <ol>
 <li>有序1
 <ol>
@@ -124,6 +150,7 @@
 <li>有序2</li>
 <li>有序3</li>
 </ol>
+<h5 id="unordered-list">Unordered List</h5>
 <ul>
 <li>無序1
 <ul>
@@ -132,18 +159,29 @@
 </li>
 <li>無序2</li>
 </ul>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h5 id="blockquote">Blockquote</h5>
 <blockquote>
-<p>這是引用，通常放在文章前當作引言</p>
+<p>This is a blockquote example.</p>
 </blockquote>
-<p><a href="www.yahoo.com.tw">連結呈現的文字1</a></p>
-<p><a href="/blog/post-1">連結呈現的文字2</a></p>
-<p><img src="/images/gallery/9.jpg" alt=""></p>
-<p>打上單行程式碼<code>hello</code></p>
-<p>多行程式碼</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;hello Bruce&#34;</span>)
+<!-- raw HTML omitted -->
+<p>Inline <code>code</code> has <code>back-ticks around</code> it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;JavaScript syntax highlighting&#34;</span>;
+<span style="color:#a6e22e">alert</span>(<span style="color:#a6e22e">s</span>);
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;hello Bruce&#34;</span>)
 <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;hello Bruce&#34;</span>)
 <span style="color:#66d9ef">print</span>(<span style="color:#e6db74">&#34;hello Bruce&#34;</span>)
-</code></pre></div><h3 id="表格部分只能簡單行列較少用">表格部分，只能簡單行列，較少用</h3>
+</code></pre></div><pre><code>No language indicated, so no syntax highlighting. 
+But let's throw in a &lt;b&gt;tag&lt;/b&gt;.
+</code></pre><!-- raw HTML omitted -->
+<h5 id="inline-html">Inline HTML</h5>
+<p>You can also use raw HTML in your Markdown, and it&rsquo;ll mostly work pretty well.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<h5 id="tables">Tables</h5>
+<p>Colons can be used to align columns.</p>
 <table>
 <thead>
 <tr>
@@ -167,6 +205,30 @@
 <td>zebra stripes</td>
 <td align="center">are neat</td>
 <td align="right">$1</td>
+</tr>
+</tbody>
+</table>
+<p>There must be at least 3 dashes separating each header cell.
+The outer pipes (|) are optional, and you don&rsquo;t need to make the 
+raw Markdown line up prettily. You can also use inline Markdown.</p>
+<table>
+<thead>
+<tr>
+<th>Markdown</th>
+<th>Less</th>
+<th>Pretty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Still</em></td>
+<td><code>renders</code></td>
+<td><strong>nicely</strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>3</td>
 </tr>
 </tbody>
 </table>
@@ -239,6 +301,9 @@
         <ul class="list-unstyled">
           <li class="mb-3"><a class="text-dark"
               href="/categories/learning-note">Learning note</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
           </li>
           <li class="mb-3"><a class="text-dark"
               href="/categories/others">Others</a>
