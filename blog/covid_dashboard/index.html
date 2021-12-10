@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GCP &#43; Data studio">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/learning-note"
+          class="text-primary">Learning note</a>
+        
+        <h2>Create COVID-19 Dashboard by Data studio</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>10 March 2021</span>
+          
+        </div>
+        
+        <img src="https://bruceewue.github.io/images/post/pexels-virus.jpg" class="img-fluid w-100 mb-4" alt="Create COVID-19 Dashboard by Data studio">
+        
+        <div class="content mb-5">
+          <p>自己來動手製作的COVID-19 Dashboard吧，本篇將透過GCP雲端服務自動抓取最新的疫情資料，並使用Google的可視化工具Data studio串接來製作每日自動更新的疫情儀表板。</p>
+<h3 id="data-source">Data source</h3>
+<p>[CSSEGISandData/COVID-19]https://github.com/CSSEGISandData/COVID-19</p>
+<h3 id="diagram">Diagram</h3>
+<p><img src="/images/post/diagram.jpg" alt="diagram"></p>
+<p>透過Cloud Scheduler定時觸發Cloud Functions中部署的爬蟲程式,並將資料儲存至Cloud Storage，並由Data Studio即時讀取最新資料並製作COVID-19即時資訊儀表板。</p>
+<h3 id="gcp">GCP</h3>
+<p><img src="/images/post/gcp.jpg" alt="GCP">
+Source: Google</p>
+<p>這次採用的雲端平台GCP內含相當多的服務可以使用，目前有提供300美金3個月的免費額度可使用；而本篇使用到的服務主要有<strong>Cloud Storage</strong>, <strong>Cloud Functions</strong>, <strong>Cloud Scheduler</strong></p>
+<h4 id="cloud-functions">Cloud Functions</h4>
+<p>利用Cloud Functions來新增一個可透過Http request觸發的爬蟲程式，記得在requirements.txt 寫入需安裝的套件(此處為<em>pandas</em>以及<em>google-cloud-storage</em>)，</p>
+<p><img src="/images/post/Cloud_fun.jpg" alt="Cloud_fun"></p>
+<p><img src="/images/post/Cloud_fun2.jpg" alt="Cloud_fun2"></p>
+<p>爬取確診人數的部分如下，也可以新增迴圈連同死亡、復原的人數一起抓取。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">crawler</span>(request):
+    <span style="color:#75715e"># get data from github</span>
+    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv&#34;</span>)
+    <span style="color:#75715e"># wide format to long format</span>
+    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>melt(df, id_vars<span style="color:#f92672">=</span>df<span style="color:#f92672">.</span>columns[:<span style="color:#ae81ff">4</span>], value_vars<span style="color:#f92672">=</span>df<span style="color:#f92672">.</span>columns[<span style="color:#ae81ff">4</span>:], var_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, value_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;count&#34;</span>)
+    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>to_csv(index<span style="color:#f92672">=</span>False)
+</code></pre></div><p>由於需要抓取自動後上傳至Cloud Storage，所以還需加入以下網址內程式碼
+<a href="https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-code-sample">Uploading objects</a></p>
+<p>Note:</p>
+<ul>
+<li>Cloud Functions只允許在 /tmp路徑下才能存檔。</li>
+<li>Cloud functions 與 Cloud Storage建議在同個地區，避免額外傳輸費用。</li>
+</ul>
+<h4 id="cloud-storage">Cloud Storage</h4>
+<p>雲端儲存空間，新增bucket後即可開始使用，也能像google drive一樣手動上傳檔案，但Cloud Storage的優勢是更能方便地在GCP上與各服務串接；免費的部分有5GB的額度。</p>
+<p><img src="/images/post/Cloud_storage.jpg" alt="Cloud_storage"></p>
+<p>觸發Cloud functions後可以確認看看是否有確實上傳確診、死亡、復原的資料
+<img src="/images/post/Cloud_storage2.jpg" alt="Cloud_storage2"></p>
+<p>Note:</p>
+<ul>
+<li>Cloud functions 與 Cloud Storage建議在同個地區，避免額外傳輸費用。</li>
+</ul>
+<h4 id="cloud-scheduler">Cloud Scheduler</h4>
+<p>可以依據原始資料的更新時間來設定希望多久執行一次爬蟲，設定方式是像在Linux中的Crontab排程，使用Cron語法，可以利用<a href="https://crontab.guru/">這個網站</a>確認自己撰寫的排程是否符合預期。</p>
+<p>設定完成的狀態如下
+<img src="/images/post/scheduler.jpg" alt="scheduler"></p>
+<p>Note:</p>
+<ul>
+<li>Cloud Scheduler完全免費方案只有設定3個Job的額度</li>
+</ul>
+<h4 id="data-studio">Data Studio</h4>
+<p>在設定好資料後就可以嘗試來把它視覺化了，這裡採用的是google免費的<a href="https://datastudio.google.com/overview">Data Studio</a>，算是滿容易上手的工具，跟GCP串接當然也是沒有問題的。</p>
+<p><img src="/images/post/data_studio.jpg" alt="data_studio"></p>
+<p>此處新增資料源-&gt;從Data Storage內選取三份csv檔案</p>
+<p><img src="/images/post/data_studio2.jpg" alt="data_studio2"></p>
+<h3 id="result">Result</h3>
+<h5 id="covid-19-dashboard">COVID-19 Dashboard</h5>
+<p><img src="/images/post/covid-dashboard.jpg" alt="covid-dashboard"></p>
+<h5 id="animated-bar-chart">Animated Bar Chart</h5>
+<p><img src="/images/post/covid-dashboard2.jpg" alt="animated_bar_chart"></p>
+<ul>
+<li>即時資訊互動儀表板如下，可自由選擇Country/Region (建議可點擊右下角&quot;Google數據分析&quot;觀看完整報表)</li>
+</ul>
+<style>
+
+.iframe-container {   
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56%;  
+  }   
+    
+
+  .iframe-container iframe {   
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+</style>
+
+
+<div class="iframe-container">
+
+    <iframe
+        src="https://datastudio.google.com/embed/reporting/e3ab4a91-2602-4899-ae8c-fc3a54b12a6a/page/y8OhC" frameborder="0" style="border:0" allowfullscreen="true">
+    </iframe>
+
+</div>
+
+
+<!-- raw HTML omitted -->
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://hahow.in/courses/5e64bb261c966500239069f9/discussions?item=5f3b47da12ec033dd6acb2bc">打造動態報表！雲端 Python 爬蟲資料流</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/learning-note">Learning note</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>
