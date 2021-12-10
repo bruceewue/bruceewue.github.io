@@ -111,12 +111,12 @@
         <div class="content mb-5">
           <p>自己來動手製作的COVID-19 Dashboard吧，本篇將透過GCP雲端服務自動抓取最新的疫情資料，並使用Google的可視化工具Data studio串接來製作每日自動更新的疫情儀表板。</p>
 <h3 id="data-source">Data source</h3>
-<p>[CSSEGISandData/COVID-19]https://github.com/CSSEGISandData/COVID-19</p>
+<p><a href="https://github.com/CSSEGISandData/COVID-19">CSSEGISandData/COVID-19</a></p>
 <h3 id="diagram">Diagram</h3>
 <p><img src="/images/post/diagram.jpg" alt="diagram"></p>
 <p>透過Cloud Scheduler定時觸發Cloud Functions中部署的爬蟲程式,並將資料儲存至Cloud Storage，並由Data Studio即時讀取最新資料並製作COVID-19即時資訊儀表板。</p>
 <h3 id="gcp">GCP</h3>
-<p><img src="/images/post/gcp.jpg" alt="GCP">
+<p><img src="/images/post/gcp.png" alt="GCP">
 Source: Google</p>
 <p>這次採用的雲端平台GCP內含相當多的服務可以使用，目前有提供300美金3個月的免費額度可使用；而本篇使用到的服務主要有<strong>Cloud Storage</strong>, <strong>Cloud Functions</strong>, <strong>Cloud Scheduler</strong></p>
 <h4 id="cloud-functions">Cloud Functions</h4>
@@ -124,13 +124,13 @@ Source: Google</p>
 <p><img src="/images/post/Cloud_fun.jpg" alt="Cloud_fun"></p>
 <p><img src="/images/post/Cloud_fun2.jpg" alt="Cloud_fun2"></p>
 <p>爬取確診人數的部分如下，也可以新增迴圈連同死亡、復原的人數一起抓取。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> pandas <span style="color:#f92672">as</span> pd
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">crawler</span>(request):
-    <span style="color:#75715e"># get data from github</span>
-    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv&#34;</span>)
-    <span style="color:#75715e"># wide format to long format</span>
-    df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>melt(df, id_vars<span style="color:#f92672">=</span>df<span style="color:#f92672">.</span>columns[:<span style="color:#ae81ff">4</span>], value_vars<span style="color:#f92672">=</span>df<span style="color:#f92672">.</span>columns[<span style="color:#ae81ff">4</span>:], var_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;date&#34;</span>, value_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;count&#34;</span>)
-    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>to_csv(index<span style="color:#f92672">=</span>False)
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">pandas</span> <span style="color:#2838b0">as</span> <span style="color:#289870">pd</span>
+<span style="color:#2838b0">def</span> <span style="color:#785840">crawler</span><span style="color:#888">(</span>request<span style="color:#888">):</span>
+    <span style="color:#888;font-style:italic"># get data from github</span>
+    df <span style="color:#666">=</span> pd<span style="color:#666">.</span>read_csv<span style="color:#888">(</span><span style="color:#b83838">&#34;https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv&#34;</span><span style="color:#888">)</span>
+    <span style="color:#888;font-style:italic"># wide format to long format</span>
+    df <span style="color:#666">=</span> pd<span style="color:#666">.</span>melt<span style="color:#888">(</span>df<span style="color:#888">,</span> id_vars<span style="color:#666">=</span>df<span style="color:#666">.</span>columns<span style="color:#888">[:</span><span style="color:#444">4</span><span style="color:#888">],</span> value_vars<span style="color:#666">=</span>df<span style="color:#666">.</span>columns<span style="color:#888">[</span><span style="color:#444">4</span><span style="color:#888">:],</span> var_name<span style="color:#666">=</span><span style="color:#b83838">&#34;date&#34;</span><span style="color:#888">,</span> value_name<span style="color:#666">=</span><span style="color:#b83838">&#34;count&#34;</span><span style="color:#888">)</span>
+    <span style="color:#2838b0">return</span> df<span style="color:#666">.</span>to_csv<span style="color:#888">(</span>index<span style="color:#666">=</span><span style="font-style:italic">False</span><span style="color:#888">)</span>
 </code></pre></div><p>由於需要抓取自動後上傳至Cloud Storage，所以還需加入以下網址內程式碼
 <a href="https://cloud.google.com/storage/docs/uploading-objects#storage-upload-object-code-sample">Uploading objects</a></p>
 <p>Note:</p>

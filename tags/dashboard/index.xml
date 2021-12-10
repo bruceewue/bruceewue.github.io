@@ -18,7 +18,7 @@
       
       <guid>https://bruceewue.github.io/blog/covid_dashboard/</guid>
       <description>自己來動手製作的COVID-19 Dashboard吧，本篇將透過GCP雲端服務自動抓取最新的疫情資料，並使用Google的可視化工具Data studio串接來製作每日自動更新的疫情儀表板。
-Data source [CSSEGISandData/COVID-19]https://github.com/CSSEGISandData/COVID-19
+Data source CSSEGISandData/COVID-19
 Diagram 透過Cloud Scheduler定時觸發Cloud Functions中部署的爬蟲程式,並將資料儲存至Cloud Storage，並由Data Studio即時讀取最新資料並製作COVID-19即時資訊儀表板。</description>
     </item>
     
