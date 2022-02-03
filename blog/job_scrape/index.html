@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Job analysis">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/data"
+          class="text-primary">Data</a>
+        
+        <h2>Job Scraping and Analysis</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>03 February 2022</span>
+          
+        </div>
+        
+        <img src="https://bruceewue.github.io/images/post/job_thumb2.jpg" class="img-fluid w-100 mb-4" alt="Job Scraping and Analysis">
+        
+        <div class="content mb-5">
+          <p>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供API。</p>
+<h3 id="environment">Environment</h3>
+<p>開發使用WSL2+Docker desktop on windows，並部署在Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
+<h3 id="data-source">Data source</h3>
+<p><img src="/images/post/indeed.jpg" alt="Indeed">
+Source: <a href="https://uk.indeed.com/">Indeed</a></p>
+<p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，data相關的職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型的職缺。</p>
+<h3 id="why-distributed">Why distributed?</h3>
+<ol>
+<li>當爬蟲程式增多時可能單一電腦負荷不了，且如果機器突然故障會讓爬蟲程式因此中斷。</li>
+<li>盡量防止因過度爬蟲被封鎖IP(搭配程式中放置sleep使用)</li>
+</ol>
+<h4 id="celeryrabbitmqflower">Celery/RabbitMQ/Flower</h4>
+<p>Celery是分散式的工作佇列系統，它是任務隊列的管理工具，Celery 專注於實時任務處理，支持任務調度。</p>
+<p>分散式爬蟲架構中有三個腳色:</p>
+<ol>
+<li>Producer，派發任務給Broker</li>
+<li>Message Broker，接收任務並轉發給Worker (本篇採用RabbitMQ:分散式任務轉發/訊息傳遞中心)</li>
+<li>Worker，從Broker中接收任務並執行(Scraper)</li>
+</ol>
+<p>流程: producer 發出任務訊息到 queue 中排隊，workers們(Celery提供的任務執行的單元)連線到broker後，可根據設定紛紛到 queue 去接收任務來進行處理。</p>
+<p>下圖為RabbitMQ的Overview介面，可以看到目前queue中有兩個任務等待worker處理，在queue的頁面中也可以清楚了解每個queue的狀態以及任務的資訊
+<img src="/images/post/rabbitmq.jpg" alt="RabbitMQ_overview"></p>
+<p>另外可以透過透過Flower來監控worker的狀態，看是否在線以及任務執行狀況
+本專案目前只有開啟兩個worker，可根據需求增減。
+<img src="/images/post/flower_worker.jpg" alt="Flower_worker"></p>
+<p>worker執行的task清單
+<img src="/images/post/flower_task.jpg" alt="Flower_task"></p>
+<h3 id="scheduling">Scheduling</h3>
+<p>因為需要每日自動爬取當日的新職缺，這裡透過python套件<em>APScheduler</em>來協助執行，以下程式片段為設定一個定時器，在週一~週日每天台北時間12:00時執行sent_crawler_task_DE這個function</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    scheduler <span style="color:#666">=</span> BackgroundScheduler<span style="color:#888">(</span>timezone<span style="color:#666">=</span><span style="color:#b83838">&#34;Asia/Taipei&#34;</span><span style="color:#888">)</span>
+    scheduler<span style="color:#666">.</span>add_job<span style="color:#888">(</span>
+        <span style="color:#388038">id</span><span style="color:#666">=</span><span style="color:#b83838">&#34;sent_crawler_task_DE&#34;</span><span style="color:#888">,</span>
+        func<span style="color:#666">=</span>sent_crawler_task_DE<span style="color:#888">,</span>
+        trigger<span style="color:#666">=</span><span style="color:#b83838">&#34;cron&#34;</span><span style="color:#888">,</span>
+        hour<span style="color:#666">=</span><span style="color:#b83838">&#34;12&#34;</span><span style="color:#888">,</span>
+        minute<span style="color:#666">=</span><span style="color:#b83838">&#34;0&#34;</span><span style="color:#888">,</span>
+        day_of_week<span style="color:#666">=</span><span style="color:#b83838">&#34;*&#34;</span><span style="color:#888">,</span>
+    <span style="color:#888">)</span>
+</code></pre></div><h3 id="api--load-test">API &amp; Load test</h3>
+<p>此處透過FastAPI創建RESTful API，FastAPI可自動生成OpenAPI文件(OAS3)，可直接在Web上對API發送request。</p>
+<p>輸入position以及location兩個參數後，會回傳json格式的職缺資料
+<img src="/images/post/scraper_apidoc.jpg" alt="OAS3-doc"></p>
+<p>可以試著對建立好的API進行壓力測試，這部分可使用python套件ApacheBench(簡稱ab)，模擬多個使用者同時對服務器發送多個request
+透過以下指令對部署在本機的API服務進行壓力測試 (concurrency=10, requests=1000)</p>
+<pre><code>apt-get install apache2-utils -y
+ab -c 10 -n 1000 'http://127.0.0.1:8888/'
+</code></pre><p>結果如下
+<img src="/images/post/ab_result.jpg" alt="ab_result"></p>
+<p>Request per second: 每秒能承受多少request
+Time per request: 平均每個request所花費的時間(ms)
+Failed requests: 代表有幾個request失敗，和服務器的穩定度有關</p>
+<h3 id="dashboard">Dashboard</h3>
+<p>為了能清楚的了解職缺狀況，採用<a href="https://redash.io/">Redash</a>這套開源BI系統製作儀表板，好處是可方便的透過撰寫SQL Query直接從DB抓取資料，再將成果圖像化呈現(目前支援Chart,tunnel,map,pivot table,word cloud&hellip;等等)，成果如下。</p>
+<p>分別針對每日張貼的各職缺數量、各職缺平均薪資、JD的文字雲來進行分析
+<img src="/images/post/dashboard.jpg" alt="dashboard"></p>
+<h3 id="deployment">Deployment</h3>
+<p>由於此應用需啟動不少service，面臨到多個docker-compose(API,scraper,rabbitmq,mysql,redash&hellip;)，需要有工具可以統一管理，此處使用Docker Swarm，透過Manager與Worker的架構概念管理多台機器(也可使用K8s)，可透過Manager來統一管理全部服務，包含更新服務、部署服務、查看LOG等等都變得相當方便；並搭配UI介面portainer進行管理監控</p>
+<p>由下圖中可以看到目前集群中有兩台機器(node)
+<img src="/images/post/portainer_swarm.jpg" alt="Portainer_swarm"></p>
+<p>可以在一個介面內統一管理所有服務
+<img src="/images/post/portainer_services.jpg" alt="Portainer_services"></p>
+<h3 id="ddns--ssl">DDNS &amp; SSL</h3>
+<p>如果要讓API能上線提供服務，那會需要能提供一個網址而非IP，一般網域是需要收費的，可以到<a href="https://www.domcomp.com/">domcomp</a>輸入有興趣的網域並查看價錢與是否已被買走；而本專案使用的是<a href="https://www.noip.com/">No-IP</a>提供的免費DDNS服務，每月需手動更新效期。</p>
+<p><img src="/images/post/noip.jpg" alt="no-ip"></p>
+<p>SSL則為安全性憑證，提供瀏覽器或電腦和伺服器之間建立加密連，成功安裝後瀏覽器網址旁會出現HTTPS圖案，簽發SSL憑證的機構很多，此處採用Let&rsquo;s Encrypt發送的免費SSL憑證，透過<a href="https://traefik.io/">Traefik</a>這個工具進行反向代理，更好的管理所有服務的網址、DNS、Load balance、並自動更新SSL憑證，且方便跟Docker結合使用。</p>
+<p><img src="/images/post/traefik.jpg" alt="traefik">
+Source:<a href="https://traefik.io/">Traefik</a></p>
+<p>下圖為透過Docker架設的traefik v2的dashboard</p>
+<h3 id="cicd">CI/CD</h3>
+<p>在專案迭代的過程中，可以透過CICD工具使得測試與部署流程自動化以降低出錯的機會；本篇使用Gitlab CI/CD，透過Specific Runner來協助執行CICD指令，目前設定當merge request時才觸發CI，自動化測試並建立docker image以及上傳docker hub，並在下tag後才觸發deploy，部署服務到docker swarm中。類似的工具有CircleCI、Github Actio等，Gitlab的好處是開源可以免費部署在自家服務器(on-premises)。</p>
+<p>以API repository為例，流程為test-&gt;build-&gt;deploy
+<img src="/images/post/gitlab_ci.jpg" alt="gitlab_ci"></p>
+<p>CI過程中測試覆蓋率(Test Coverage)
+<img src="/images/post/test_coverage.jpg" alt="test_coverage"></p>
+<h3 id="result">Result</h3>
+<p><a href="https://jobapi.ddns.net/">https://jobapi.ddns.net/</a></p>
+<p><a href="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default">https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default</a></p>
+<style>
+
+.iframe-container {   
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56%;  
+  }   
+    
+
+  .iframe-container iframe {   
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+  }
+</style>
+
+
+<div class="iframe-container">
+
+    <iframe
+        src="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default" frameborder="0" style="border:0" allowfullscreen="true">
+    </iframe>
+
+</div>
+
+
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://www.books.com.tw/products/0010907880">Python 大數據專案 X 工程 X 產品 資料工程師的升級攻略</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data">Data</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

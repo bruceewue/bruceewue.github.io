@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blogs on Bruce Wu&#39;s Blog</title>
-    <link>https://bruceewue.github.io/blog/</link>
-    <description>Recent content in Blogs on Bruce Wu&#39;s Blog</description>
+    <title>Data on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/categories/data/</link>
+    <description>Recent content in Data on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Thu, 03 Feb 2022 10:07:47 +0600</lastBuildDate>
     
-	<atom:link href="https://bruceewue.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://bruceewue.github.io/categories/data/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -22,18 +22,6 @@ Environment 開發使用WSL2+Docker desktop on windows，並部署在Oracle clou
     </item>
     
     <item>
-      <title>ML Model Deployment</title>
-      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
-      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>在學習了眾多機器學習、資料分析等方法後不禁思考:下一步呢? 該如何讓建立的模型或分析的成果能實際落地提供使用?
-本篇以天池競賽中的製造業數據為例，創建機器學習系統，包含模型建置、API服務部署及系統監控，並結合CICD將流程自動化。
-Data source 本數據集是關於化工連續製程的數據，目標是希望預測Yield，屬於迴歸問題(regression)，本案例中模擬從AWS S3取得資料
-Digital Manufacturing Algorithm Competition of JinNan Tianjin</description>
-    </item>
-    
-    <item>
       <title>Create COVID-19 Dashboard by Data studio</title>
       <link>https://bruceewue.github.io/blog/covid_dashboard/</link>
       <pubDate>Wed, 10 Mar 2021 10:07:47 +0600</pubDate>
@@ -42,16 +30,6 @@ Digital Manufacturing Algorithm Competition of JinNan Tianjin</description>
       <description>自己來動手製作的COVID-19 Dashboard吧，本篇將透過GCP雲端服務自動抓取最新的疫情資料，並使用Google的可視化工具Data studio串接來製作每日自動更新的疫情儀表板。
 Data source CSSEGISandData/COVID-19
 Diagram 透過Cloud Scheduler定時觸發Cloud Functions中部署的爬蟲程式,並將資料儲存至Cloud Storage，並由Data Studio即時讀取最新資料並製作COVID-19即時資訊儀表板。</description>
-    </item>
-    
-    <item>
-      <title>Markdown test</title>
-      <link>https://bruceewue.github.io/blog/markdown_test/</link>
-      <pubDate>Wed, 02 Sep 2020 21:07:47 +0800</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/markdown_test/</guid>
-      <description>Markdown Example
-Heading 1 Heading 2 Heading 3 Heading 4 Heading 5 Heading 6 Emphasis Emphasis, aka italics, with asterisks or underscores.</description>
     </item>
     
   </channel>
