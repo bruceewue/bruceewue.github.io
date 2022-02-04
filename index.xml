@@ -6,20 +6,10 @@
     <description>Recent content on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Thu, 03 Feb 2022 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Fri, 03 Dec 2021 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Job Scraping and Analysis</title>
-      <link>https://bruceewue.github.io/blog/job_scrape/</link>
-      <pubDate>Thu, 03 Feb 2022 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
-      <description>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供API。
-Environment 開發使用WSL2+Docker desktop on windows，並部署在Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</description>
-    </item>
     
     <item>
       <title>ML Model Deployment</title>
