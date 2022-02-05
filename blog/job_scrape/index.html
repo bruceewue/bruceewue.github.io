@@ -102,27 +102,30 @@
           <span>By Bruce Wu</span>
           
           <span class="border-bottom border-primary px-2 mx-1"></span>
-          <span>03 February 2022</span>
+          <span>04 February 2022</span>
           
         </div>
         
         <img src="https://bruceewue.github.io/images/post/job_thumb2.jpg" class="img-fluid w-100 mb-4" alt="Job Scraping and Analysis">
         
         <div class="content mb-5">
-          <p>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供API。</p>
+          <p>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供資料API；成果展示於本文末。</p>
+<h3 id="project-diagram">Project Diagram</h3>
+<p>(待補)</p>
 <h3 id="environment">Environment</h3>
-<p>開發使用WSL2+Docker desktop on windows，並部署在Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
+<p>開發環境使用Ubuntu 20.04(WSL2)+Docker desktop on windows，並部署在Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
 <h3 id="data-source">Data source</h3>
 <p><img src="/images/post/indeed.jpg" alt="Indeed">
 Source: <a href="https://uk.indeed.com/">Indeed</a></p>
-<p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，data相關的職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型的職缺。</p>
+<p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，data相關的正職職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型職缺。</p>
 <h3 id="why-distributed">Why distributed?</h3>
 <ol>
+<li>增加爬蟲效率。</li>
 <li>當爬蟲程式增多時可能單一電腦負荷不了，且如果機器突然故障會讓爬蟲程式因此中斷。</li>
-<li>盡量防止因過度爬蟲被封鎖IP(搭配程式中放置sleep使用)</li>
+<li>盡量防止因過度爬蟲被封鎖IP(搭配程式中放置sleep使用)。</li>
 </ol>
 <h4 id="celeryrabbitmqflower">Celery/RabbitMQ/Flower</h4>
-<p>Celery是分散式的工作佇列系統，它是任務隊列的管理工具，Celery 專注於實時任務處理，支持任務調度。</p>
+<p>Celery是分散式的工作佇列系統，它是任務隊列的管理工具，Celery 專注於即時任務處理，支持任務調度。</p>
 <p>分散式爬蟲架構中有三個腳色:</p>
 <ol>
 <li>Producer，派發任務給Broker</li>
@@ -130,7 +133,7 @@ Source: <a href="https://uk.indeed.com/">Indeed</a></p>
 <li>Worker，從Broker中接收任務並執行(Scraper)</li>
 </ol>
 <p>流程: producer 發出任務訊息到 queue 中排隊，workers們(Celery提供的任務執行的單元)連線到broker後，可根據設定紛紛到 queue 去接收任務來進行處理。</p>
-<p>下圖為RabbitMQ的Overview介面，可以看到目前queue中有兩個任務等待worker處理，在queue的頁面中也可以清楚了解每個queue的狀態以及任務的資訊
+<p>下圖為RabbitMQ的Overview介面，可以看到目前queue中有兩個任務等待worker處理，在queue的頁面中也可以清楚了解每個queue的狀態以及任務的資訊。
 <img src="/images/post/rabbitmq.jpg" alt="RabbitMQ_overview"></p>
 <p>另外可以透過透過Flower來監控worker的狀態，看是否在線以及任務執行狀況
 本專案目前只有開啟兩個worker，可根據需求增減。
@@ -138,7 +141,7 @@ Source: <a href="https://uk.indeed.com/">Indeed</a></p>
 <p>worker執行的task清單
 <img src="/images/post/flower_task.jpg" alt="Flower_task"></p>
 <h3 id="scheduling">Scheduling</h3>
-<p>因為需要每日自動爬取當日的新職缺，這裡透過python套件<em>APScheduler</em>來協助執行，以下程式片段為設定一個定時器，在週一~週日每天台北時間12:00時執行sent_crawler_task_DE這個function</p>
+<p>因為需要每日自動爬取當日的新職缺，這裡透過python套件<em>APScheduler</em>來協助執行，以下程式片段為設定一個定時器，在週一至週日每天台北時間12:00時執行sent_crawler_task_DE這個function</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    scheduler <span style="color:#666">=</span> BackgroundScheduler<span style="color:#888">(</span>timezone<span style="color:#666">=</span><span style="color:#b83838">&#34;Asia/Taipei&#34;</span><span style="color:#888">)</span>
     scheduler<span style="color:#666">.</span>add_job<span style="color:#888">(</span>
         <span style="color:#388038">id</span><span style="color:#666">=</span><span style="color:#b83838">&#34;sent_crawler_task_DE&#34;</span><span style="color:#888">,</span>
@@ -149,7 +152,7 @@ Source: <a href="https://uk.indeed.com/">Indeed</a></p>
         day_of_week<span style="color:#666">=</span><span style="color:#b83838">&#34;*&#34;</span><span style="color:#888">,</span>
     <span style="color:#888">)</span>
 </code></pre></div><h3 id="api--load-test">API &amp; Load test</h3>
-<p>此處透過FastAPI創建RESTful API，FastAPI可自動生成OpenAPI文件(OAS3)，可直接在Web上對API發送request。</p>
+<p>透過FastAPI創建RESTful API，FastAPI可自動生成OpenAPI文件(OAS3)，可直接在Web上對API發送request。</p>
 <p>輸入position以及location兩個參數後，會回傳json格式的職缺資料
 <img src="/images/post/scraper_apidoc.jpg" alt="OAS3-doc"></p>
 <p>可以試著對建立好的API進行壓力測試，這部分可使用python套件ApacheBench(簡稱ab)，模擬多個使用者同時對服務器發送多個request
@@ -169,15 +172,16 @@ Failed requests: 代表有幾個request失敗，和服務器的穩定度有關</
 <p>由於此應用需啟動不少service，面臨到多個docker-compose(API,scraper,rabbitmq,mysql,redash&hellip;)，需要有工具可以統一管理，此處使用Docker Swarm，透過Manager與Worker的架構概念管理多台機器(也可使用K8s)，可透過Manager來統一管理全部服務，包含更新服務、部署服務、查看LOG等等都變得相當方便；並搭配UI介面portainer進行管理監控</p>
 <p>由下圖中可以看到目前集群中有兩台機器(node)
 <img src="/images/post/portainer_swarm.jpg" alt="Portainer_swarm"></p>
-<p>可以在一個介面內統一管理所有服務
+<p>可以在單個介面內統一管理所有服務
 <img src="/images/post/portainer_services.jpg" alt="Portainer_services"></p>
 <h3 id="ddns--ssl">DDNS &amp; SSL</h3>
 <p>如果要讓API能上線提供服務，那會需要能提供一個網址而非IP，一般網域是需要收費的，可以到<a href="https://www.domcomp.com/">domcomp</a>輸入有興趣的網域並查看價錢與是否已被買走；而本專案使用的是<a href="https://www.noip.com/">No-IP</a>提供的免費DDNS服務，每月需手動更新效期。</p>
 <p><img src="/images/post/noip.jpg" alt="no-ip"></p>
-<p>SSL則為安全性憑證，提供瀏覽器或電腦和伺服器之間建立加密連，成功安裝後瀏覽器網址旁會出現HTTPS圖案，簽發SSL憑證的機構很多，此處採用Let&rsquo;s Encrypt發送的免費SSL憑證，透過<a href="https://traefik.io/">Traefik</a>這個工具進行反向代理，更好的管理所有服務的網址、DNS、Load balance、並自動更新SSL憑證，且方便跟Docker結合使用。</p>
+<p>SSL則為安全性憑證，提供瀏覽器或電腦和伺服器之間建立加密連，成功安裝後瀏覽器網址旁會出現HTTPS圖案，簽發SSL憑證的機構很多，此處採用Let&rsquo;s Encrypt發送的免費SSL憑證，透過<a href="https://traefik.io/">Traefik</a>這個工具進行反向代理，包括更好的管理所有服務的網址、DNS、Load balance、並自動更新SSL憑證，且易於跟Docker結合使用。</p>
 <p><img src="/images/post/traefik.jpg" alt="traefik">
 Source:<a href="https://traefik.io/">Traefik</a></p>
-<p>下圖為透過Docker架設的traefik v2的dashboard</p>
+<p>下圖為traefik v2的dashboard</p>
+<p><img src="/images/post/traefik_dashboard.jpg" alt="traefik_dashboard"></p>
 <h3 id="cicd">CI/CD</h3>
 <p>在專案迭代的過程中，可以透過CICD工具使得測試與部署流程自動化以降低出錯的機會；本篇使用Gitlab CI/CD，透過Specific Runner來協助執行CICD指令，目前設定當merge request時才觸發CI，自動化測試並建立docker image以及上傳docker hub，並在下tag後才觸發deploy，部署服務到docker swarm中。類似的工具有CircleCI、Github Actio等，Gitlab的好處是開源可以免費部署在自家服務器(on-premises)。</p>
 <p>以API repository為例，流程為test-&gt;build-&gt;deploy
@@ -186,8 +190,7 @@ Source:<a href="https://traefik.io/">Traefik</a></p>
 <img src="/images/post/test_coverage.jpg" alt="test_coverage"></p>
 <h3 id="result">Result</h3>
 <p><a href="https://jobapi.ddns.net/">https://jobapi.ddns.net/</a></p>
-<p><a href="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default">https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default</a></p>
-<style>
+<p><style>
 
 .iframe-container {   
     position: relative;
@@ -216,6 +219,7 @@ Source:<a href="https://traefik.io/">Traefik</a></p>
 </div>
 
 
+<a href="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default">https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default</a></p>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
 <li><a href="https://www.books.com.tw/products/0010907880">Python 大數據專案 X 工程 X 產品 資料工程師的升級攻略</a></li>
