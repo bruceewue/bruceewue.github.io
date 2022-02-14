@@ -113,9 +113,12 @@
 <h3 id="project-diagram">Project Diagram</h3>
 <p>(待補)</p>
 <h3 id="environment">Environment</h3>
-<p>開發環境使用Ubuntu 20.04(WSL2)+Docker desktop on windows，並部署在Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
+<p>Develop: Ubuntu 20.04(WSL2)+Docker desktop on windows+python 3.9
+Deploy: Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
 <h3 id="data-source">Data source</h3>
-<p><img src="/images/post/indeed.jpg" alt="Indeed">
+<p><img src="/images/post/indeed.jpg" alt="Indeed"></p>
+<p>職缺搜尋介面
+<img src="/images/post/indeed_ml.jpg" alt="Indeed">
 Source: <a href="https://uk.indeed.com/">Indeed</a></p>
 <p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，data相關的正職職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型職缺。</p>
 <h3 id="why-distributed">Why distributed?</h3>
@@ -188,9 +191,19 @@ Source:<a href="https://traefik.io/">Traefik</a></p>
 <img src="/images/post/gitlab_ci.jpg" alt="gitlab_ci"></p>
 <p>CI過程中測試覆蓋率(Test Coverage)
 <img src="/images/post/test_coverage.jpg" alt="test_coverage"></p>
+<h3 id="monitoring">Monitoring</h3>
+<p>部署服務之後還需要進行監控，包含各服務的運作狀態以及機器的運行狀態是否符合預期；透過Prometheus串接traefik與node-exporter抓取時序數據，並將結果可視化呈現於Grafana儀表板中</p>
+<p><img src="/images/post/grafana_traefik.jpg" alt="grafana_traefik">
+Source:<a href="https://grafana.com/grafana/dashboards/12250">Traefik2.2</a></p>
+<p>目前使用兩台機器，Node數為2
+<img src="/images/post/grafana_node.jpg" alt="grafana_node">
+Source:<a href="https://grafana.com/grafana/dashboards/11074">Node Exporter for Prometheus Dashboard EN</a></p>
 <h3 id="result">Result</h3>
-<p><a href="https://jobapi.ddns.net/">https://jobapi.ddns.net/</a></p>
-<p><style>
+<h5 id="data-api"><strong>Data API</strong></h5>
+<p><a href="https://bit.ly/3gGBTUX">https://bit.ly/3gGBTUX</a></p>
+<h5 id="dashboard-1"><strong>Dashboard</strong></h5>
+<p><a href="https://bit.ly/3HNcLrf">https://bit.ly/3HNcLrf</a>
+<style>
 
 .iframe-container {   
     position: relative;
@@ -218,8 +231,7 @@ Source:<a href="https://traefik.io/">Traefik</a></p>
 
 </div>
 
-
-<a href="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default">https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default</a></p>
+</p>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
 <li><a href="https://www.books.com.tw/products/0010907880">Python 大數據專案 X 工程 X 產品 資料工程師的升級攻略</a></li>
