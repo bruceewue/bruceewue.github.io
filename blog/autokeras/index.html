@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="AutoML">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/machine-learning"
+          class="text-primary">Machine learning</a>
+        
+        <h2>AutoKeras+ClearML</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>01 March 2022</span>
+          
+        </div>
+        
+        <div class="content mb-5">
+          <p>在模型訓練的時候總是希望能得到較佳的模型參數與網路架構，如果仰賴自行調校可能會相對困難與耗時，所以希望透過AutoML工具來替我們完成。</p>
+<h3 id="autokeras">AutoKeras</h3>
+<p>本篇嘗試使用基於Keras的AutoML框架名為<a href="https://autokeras.com/">AutoKeras</a>(使用超參數搜尋和ENAS(Efficient Neural Architecture Search))，也可以協助完成一些前處理手段(normalization,vectorization,encoding,..)。舉凡結構化資料，圖像資料，時間序列預測，多任務等都支援。</p>
+<p><img src="/images/post/automl/autokeras.jpg" alt="auto_keras">
+Source: <a href="https://autokeras.com/">AutoKeras</a></p>
+<p>在官網範例中只要三行就可以完成訓練和預測</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">autokeras</span> <span style="color:#2838b0">as</span> <span style="color:#289870">ak</span>
+
+clf <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageClassifier<span style="color:#888">()</span>
+clf<span style="color:#666">.</span>fit<span style="color:#888">(</span>x_train<span style="color:#888">,</span> y_train<span style="color:#888">)</span>
+results <span style="color:#666">=</span> clf<span style="color:#666">.</span>predict<span style="color:#888">(</span>x_test<span style="color:#888">)</span>
+</code></pre></div><h3 id="environment">Environment</h3>
+<p>搭配Colab pro進行訓練，其基本模組與GPU已安裝並配置好，可以直接專注於程式碼開發相當方便，升級到pro之後目前較常分配到的顯卡是P100。</p>
+<p><img src="/images/post/automl/colab.jpg" alt="colab_pro"></p>
+<h3 id="example-1---fraud-detection">Example 1 - Fraud detection</h3>
+<p>案例是Kaggle上的信用卡詐欺偵測，屬於結構化資料的分類問題
+dataset: <a href="https://github.com/nsethi31/Kaggle-Data-Credit-Card-Fraud-Detection/blob/master/creditcard.csv">Kaggle-Data-Credit-Card-Fraud-Detection</a>
+(284807 rows × 31 columns)</p>
+<p><img src="/images/post/automl/fraud_data.jpg" alt="fraud_data"></p>
+<p>使用StructuredDataClassifier處理結構資料分類問題。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">cbs <span style="color:#666">=</span> <span style="color:#888">[</span>
+    <span style="color:#888;font-style:italic"># 連續三個周期訓練沒進步就換到下個模型</span>
+    <span style="color:#888;font-style:italic"># monitor default: val_loss</span>
+    tf<span style="color:#666">.</span>keras<span style="color:#666">.</span>callbacks<span style="color:#666">.</span>EarlyStopping<span style="color:#888">(</span>patience<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">,</span>monitor<span style="color:#666">=</span><span style="color:#b83838">&#39;val_loss&#39;</span><span style="color:#888">),</span> 
+    <span style="color:#888;font-style:italic"># histogram_freq=1表示在每次訓練週期各統計一次，並以直方圖展示訓練時各層神經元weight,bias分布</span>
+    tf<span style="color:#666">.</span>keras<span style="color:#666">.</span>callbacks<span style="color:#666">.</span>TensorBoard<span style="color:#888">(</span>log_dir<span style="color:#666">=</span>logdir<span style="color:#888">,</span> histogram_freq<span style="color:#666">=</span><span style="color:#444">1</span><span style="color:#888">)</span>
+<span style="color:#888">]</span>
+<span style="color:#888;font-style:italic"># max_trials為嘗試模型的數量，預設值為100，可以在目錄下的oracle.json找到預設模型的的結構</span>
+clf<span style="color:#666">=</span>ak<span style="color:#666">.</span>StructuredDataClassifier<span style="color:#888">(</span>max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
+<span style="color:#888;font-style:italic"># epoch 預設值1000，結合earlystopping可能提前結束</span>
+history<span style="color:#666">=</span>clf<span style="color:#666">.</span>fit<span style="color:#888">(</span>x_train<span style="color:#888">,</span>y_train<span style="color:#888">,</span>callbacks<span style="color:#666">=</span>cbs<span style="color:#888">,</span>epochs<span style="color:#666">=</span><span style="color:#444">25</span><span style="color:#888">)</span>
+</code></pre></div><p>除了直接使用<em>StructuredDataClassifier</em>之外，如需自訂模型架構、搜尋空間等也可使用<em>AutoModel</em>對模型做進一步設計，如下所示。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">input_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>StructuredDataInput<span style="color:#888">()</span>
+output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>StructuredDataBlock<span style="color:#888">()(</span>input_node<span style="color:#888">)</span>
+output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ClassificationHead<span style="color:#888">()(</span>output_node<span style="color:#888">)</span>
+clf <span style="color:#666">=</span> ak<span style="color:#666">.</span>AutoModel<span style="color:#888">(</span>inputs<span style="color:#666">=</span>input_node<span style="color:#888">,</span> outputs<span style="color:#666">=</span>output_node<span style="color:#888">,</span> max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
+</code></pre></div><p>儲存與載入模型</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># Save model</span>
+<span style="color:#2838b0">try</span><span style="color:#888">:</span>
+  <span style="color:#888;font-style:italic"># TensorFlow SavedModel format</span>
+  model<span style="color:#666">.</span>save<span style="color:#888">(</span><span style="color:#b83838">&#39;model_autokeras&#39;</span><span style="color:#888">,</span>save_format<span style="color:#666">=</span><span style="color:#b83838">&#39;tf&#39;</span><span style="color:#888">)</span>
+<span style="color:#2838b0">except</span><span style="color:#888">:</span>
+  <span style="color:#888;font-style:italic"># keras h5 format</span>
+  model<span style="color:#666">.</span>save<span style="color:#888">(</span><span style="color:#b83838">&#39;model_autokeras.h5&#39;</span><span style="color:#888">)</span>
+
+<span style="color:#888;font-style:italic"># Load AutoKeras model</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">tensorflow.keras.models</span> <span style="color:#2838b0">import</span> load_model
+loaded_model <span style="color:#666">=</span> load_model<span style="color:#888">(</span><span style="color:#b83838">&#39;./auto_model/best_model&#39;</span><span style="color:#888">,</span> 
+custom_objects<span style="color:#666">=</span>ak<span style="color:#666">.</span>CUSTOM_OBJECTS<span style="color:#888">)</span> 
+</code></pre></div><p>訓練過程 (Colab)
+<img src="/images/post/automl/fraud_train.jpg" alt="fraud_trainjpg"></p>
+<ul>
+<li>如果中斷訓練後再次執行，會依據已經紀錄的內容來接續訓練</li>
+<li>訓練完成後，AutoKeras會針對表現最好的模型，合併使用所有training set + validation set再完整的參與訓練一次。</li>
+<li>所有trial完成後，表現最佳的模型會自動存放在best_model/*</li>
+<li>由於本資料集存在類別不均衡的問題(imbalanced)，Autokeras也支援在fit()中設定class_weight來調整各類別的損失值(loss)比重，使模型更重視少數類別。</li>
+</ul>
+<h4 id="training-visualization----tensorboard">Training Visualization  - TensorBoard</h4>
+<p>為了瞭解訓練過程，可以使用tensorboard讀取在callbck中儲存的log資料將訓練過程視覺化；利用免費的tensorboard.dev則可以產生公開的頁面方便與他人分享。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">tensorflow</span> <span style="color:#2838b0">as</span> <span style="color:#289870">tf</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">datetime</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">tensorboard.plugins.hparams</span> <span style="color:#2838b0">import</span> api <span style="color:#2838b0">as</span> hp
+
+<span style="background-color:#a848a8">!</span>tensorboard dev upload <span style="color:#666">--</span>logdir logs \
+  <span style="color:#666">--</span>name <span style="color:#b83838">&#34;Simple experiment&#34;</span> \
+  <span style="color:#666">--</span>description <span style="color:#b83838">&#34;fraud detect&#34;</span> \
+</code></pre></div><p>在訓練前執行以上程式片段並勾選&quot;Reload data&rdquo;，訓練時數據就會隨著更新。</p>
+<p>訓練過程的accuracy與loss變化
+<img src="/images/post/automl/tbdev.jpg" alt="tbdev"></p>
+<p>模型結構
+<img src="/images/post/automl/tbdev2.jpg" alt="tbdev2"></p>
+<h4 id="clearml">ClearML</h4>
+<p>如果希望監控並追蹤實驗結果，也希望多人一起共享實驗記錄，也可以使用支援AutoKeras的MLOps平台<a href="https://clear.ml/">ClearML</a>，以互動示網頁呈現。</p>
+<p>from clearml import Task</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">from</span> <span style="color:#289870">clearML</span> <span style="color:#2838b0">import</span> Task
+<span style="color:#888;font-style:italic"># register at https://app.community.clear.ml</span>
+<span style="color:#888;font-style:italic"># get the &#39;key&#39; and &#39;secret&#39;：</span>
+Task<span style="color:#666">.</span>set_credentials<span style="color:#888">(</span>
+    api_host<span style="color:#666">=</span><span style="color:#b83838">&#39;https://api.community.clear.ml&#39;</span><span style="color:#888">,</span>
+    web_host<span style="color:#666">=</span><span style="color:#b83838">&#39;https://app.community.clear.ml&#39;</span><span style="color:#888">,</span>
+    files_host<span style="color:#666">=</span><span style="color:#b83838">&#39;https://files.community.clear.ml&#39;</span><span style="color:#888">,</span>
+    key<span style="color:#666">=</span><span style="color:#b83838">&#39;xxxxx&#39;</span><span style="color:#888">,</span>
+    secret<span style="color:#666">=</span><span style="color:#b83838">&#39;xxxxxx&#39;</span>
+<span style="color:#888">)</span>
+<span style="color:#888;font-style:italic"># Create a new ClearML task</span>
+<span style="color:#888;font-style:italic"># Visit https://app.community.clear.ml/dashboard</span>
+task <span style="color:#666">=</span> Task<span style="color:#666">.</span>init<span style="color:#888">(</span>project_name<span style="color:#666">=</span><span style="color:#b83838">&#39;autokeras age&#39;</span><span style="color:#888">,</span> task_name<span style="color:#666">=</span><span style="color:#b83838">&#39;age regressor&#39;</span><span style="color:#888">)</span>
+</code></pre></div><p>ClearML主頁面中可查看project overview
+<img src="/images/post/automl/clearml0.jpg" alt="clearml0"></p>
+<p>除了訓練過程loss,accuracy變化趨勢，也包含機器的使用狀況
+<img src="/images/post/automl/clearml2.jpg" alt="clearml2">
+<img src="/images/post/automl/clearml.jpg" alt="clearml"></p>
+<p>模型中weight,bias的變化
+<img src="/images/post/automl/clearml3.jpg" alt="clearml3"></p>
+<ul>
+<li>ClearML也會自動上傳記錄matplotlib跟seaborn儲存在其監控目錄的結果</li>
+</ul>
+<h3 id="example-2---age-prediction">Example 2 - Age prediction</h3>
+<p>另一個範例是年齡預測，透過照片來預測年齡，屬於迴歸問題。
+Dataset: <a href="https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar">wiki_crop</a>，
+經圖像篩選以及前處理後，轉換成52984張128*128的圖片。</p>
+<p>Training data
+<img src="/images/post/automl/age_train.jpg" alt="age_train"></p>
+<p>使用AutoModel可進行模型細節自定義，寫法上很像Keras函數式API(Functional API)，AutoKeras再從我們給的條件下，從中找到最佳結果。</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">input_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageInput<span style="color:#888">()</span>
+<span style="color:#888;font-style:italic"># If just want to try EfficientNet b0~b7</span>
+output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageBlock<span style="color:#888">(</span>block_type<span style="color:#666">=</span><span style="color:#b83838">&#39;efficient&#39;</span><span style="color:#888">,</span> normalize<span style="color:#666">=</span><span style="font-style:italic">True</span><span style="color:#888">,</span> augment<span style="color:#666">=</span><span style="font-style:italic">True</span><span style="color:#888">)(</span>input_node<span style="color:#888">)</span>
+output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>RegressionHead<span style="color:#888">(</span>droupout<span style="color:#666">=</span><span style="color:#444">0.25</span><span style="color:#888">)(</span>output_node<span style="color:#888">)</span>
+reg <span style="color:#666">=</span> ak<span style="color:#666">.</span>AutoModel<span style="color:#888">(</span>inputs<span style="color:#666">=</span>input_node<span style="color:#888">,</span>outputs<span style="color:#666">=</span>output_node<span style="color:#888">,</span> max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
+</code></pre></div><p>在簡單訓練幾個epoch後的成果(Testing)
+<img src="/images/post/automl/age_result.jpg" alt="age_result"></p>
+<ul>
+<li>AutoKeras也支援處理Multi-modal資料跟multi-task模型的問題，利用AutoModel來自定義更複雜的模型結構。例如下圖包含兩種類型的輸入資料，而最後須同時預測分類標籤以及迴歸數值。</li>
+</ul>
+<p><img src="/images/post/automl/multi.jpg" alt="multi">
+Source: <a href="https://autokeras.com/tutorial/multi/">Multi-Modal and Multi-Task</a></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://autokeras.com/">AutoKeras</a></li>
+<li><a href="https://colab.research.google.com/github/tensorflow/tensorboard/blob/master/docs/tbdev_getting_started.ipynb">Getting started with TensorBoard.dev</a></li>
+<li><a href="https://www.books.com.tw/products/0010911296?utm_source=www&amp;utm_medium=share&amp;utm_content=copy&amp;utm_campaign=product&amp;utm_term=0010911296">AutoML 自動化機器學習</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data">Data</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

@@ -3,18 +3,58 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://bruceewue.github.io/blog/autokeras-conflicted/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/blog/flaml/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/blog/autokeras-conflicted/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/blog/autokeras/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/automl/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://bruceewue.github.io/blog/</loc>
-    <lastmod>2022-02-04T10:07:47+06:00</lastmod>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/</loc>
-    <lastmod>2022-02-04T10:07:47+06:00</lastmod>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/categories/</loc>
-    <lastmod>2022-02-04T10:07:47+06:00</lastmod>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/machine-learning/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/mlops/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/</loc>
+    <lastmod>2022-03-01T10:07:47+06:00</lastmod>
   </url>
   
   <url>
@@ -43,22 +83,7 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/tags/</loc>
-    <lastmod>2022-02-04T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/categories/machine-learning/</loc>
-    <lastmod>2021-12-03T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://bruceewue.github.io/blog/ml_deployment/</loc>
-    <lastmod>2021-12-03T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/mlops/</loc>
     <lastmod>2021-12-03T10:07:47+06:00</lastmod>
   </url>
   

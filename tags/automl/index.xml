@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>MLOps on Bruce Wu&#39;s Blog</title>
-    <link>https://bruceewue.github.io/tags/mlops/</link>
-    <description>Recent content in MLOps on Bruce Wu&#39;s Blog</description>
+    <title>AutoML on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/tags/automl/</link>
+    <description>Recent content in AutoML on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Tue, 01 Mar 2022 10:07:47 +0600</lastBuildDate>
     
-	<atom:link href="https://bruceewue.github.io/tags/mlops/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://bruceewue.github.io/tags/automl/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -58,18 +58,6 @@ AutoKeras 本篇嘗試使用基於Keras的AutoML框架名為AutoKeras(使用超�
 Source: AutoKeras
 在官網範例中只要三行就可以完成訓練和預測
 import autokeras as ak clf = ak.</description>
-    </item>
-    
-    <item>
-      <title>ML Model Deployment</title>
-      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
-      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>在學習了眾多機器學習、資料分析等方法後不禁思考:下一步呢? 該如何讓建立的模型或分析的成果能實際落地提供使用?
-本篇以天池競賽中的製造業數據為例，創建機器學習系統，包含模型建置、API服務部署及系統監控，並結合CICD將流程自動化。
-Data source 本數據集是關於化工連續製程的數據，目標是希望預測Yield，屬於迴歸問題(regression)，本案例中模擬從AWS S3取得資料
-Digital Manufacturing Algorithm Competition of JinNan Tianjin</description>
     </item>
     
   </channel>
