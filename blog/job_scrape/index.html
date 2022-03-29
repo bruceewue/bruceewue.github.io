@@ -109,19 +109,21 @@
         <img src="https://bruceewue.github.io/images/post/job_thumb2.jpg" class="img-fluid w-100 mb-4" alt="Job Scraping and Analysis">
         
         <div class="content mb-5">
-          <p>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供資料API；成果展示於本文末。</p>
+          <p>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供資料API。成果展示於本文末。</p>
 <h3 id="project-diagram">Project Diagram</h3>
-<p>(待補)</p>
+<p><img src="/images/post/job_scrape_diagram.png" alt="diagram"></p>
 <h3 id="environment">Environment</h3>
-<p>Develop: Ubuntu 20.04(WSL2)+Docker desktop on windows+python 3.9
-Deploy: Oracle cloud中的VM(2 OCPUs(ARM64), 12GB RAM)*2</p>
+<p>Develop: Ubuntu 20.04(WSL2) + python 3.9<br>
+Deploy: VM(2 OCPUs(ARM64), 12GB RAM)*2 in Oracle Cloud</p>
 <h3 id="data-source">Data source</h3>
 <p><img src="/images/post/indeed.jpg" alt="Indeed"></p>
-<p>職缺搜尋介面
-<img src="/images/post/indeed_ml.jpg" alt="Indeed">
+<p>職缺搜尋介面:
+<img src="/images/post/indeed_ml.jpg" alt="Indeed_search">
 Source: <a href="https://uk.indeed.com/">Indeed</a></p>
-<p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，data相關的正職職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型職缺。</p>
+<p>目前以英國最大的求職網Indeed為主，為避免對服務器造成負擔，只爬取位於London地區，資料科學相關的正職職缺(Ex. ML engineer/Data engineer/Data scientist/Data analyst/Deep learning&hellip;)，且只截取近三個月內資料，並在每日排程中自動抓取當天新增的職缺；將來可再新增其他平台或其他類型職缺。</p>
 <h3 id="why-distributed">Why distributed?</h3>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <ol>
 <li>增加爬蟲效率。</li>
 <li>當爬蟲程式增多時可能單一電腦負荷不了，且如果機器突然故障會讓爬蟲程式因此中斷。</li>
@@ -172,7 +174,7 @@ Failed requests: 代表有幾個request失敗，和服務器的穩定度有關</
 <p>分別針對每日張貼的各職缺數量、各職缺平均薪資、JD的文字雲來進行分析
 <img src="/images/post/dashboard.jpg" alt="dashboard"></p>
 <h3 id="deployment">Deployment</h3>
-<p>由於此應用需啟動不少service，面臨到多個docker-compose(API,scraper,rabbitmq,mysql,redash&hellip;)，需要有工具可以統一管理，此處使用Docker Swarm，透過Manager與Worker的架構概念管理多台機器(也可使用K8s)，可透過Manager來統一管理全部服務，包含更新服務、部署服務、查看LOG等等都變得相當方便；並搭配UI介面portainer進行管理監控</p>
+<p>由於此應用需啟動不少service，面臨到多個docker-compose(API,scraper,rabbitmq,mysql,redash&hellip;)，需要有工具可以統一管理，此處使用Docker Swarm，透過Manager與Worker的架構概念管理多台機器(也可使用K8s)，可透過Manager來統一管理全部服務，包含更新服務、部署服務、查看LOG等等都變得相當方便；並搭配UI介面portainer進行管理監控。</p>
 <p>由下圖中可以看到目前集群中有兩台機器(node)
 <img src="/images/post/portainer_swarm.jpg" alt="Portainer_swarm"></p>
 <p>可以在單個介面內統一管理所有服務
@@ -199,9 +201,13 @@ Source:<a href="https://grafana.com/grafana/dashboards/12250">Traefik2.2</a></p>
 <img src="/images/post/grafana_node.jpg" alt="grafana_node">
 Source:<a href="https://grafana.com/grafana/dashboards/11074">Node Exporter for Prometheus Dashboard EN</a></p>
 <h3 id="result">Result</h3>
-<h5 id="data-api"><strong>Data API</strong></h5>
+<ul>
+<li><strong>Data API</strong></li>
+</ul>
 <p><a href="https://bit.ly/3gGBTUX">https://bit.ly/3gGBTUX</a></p>
-<h5 id="dashboard-1"><strong>Dashboard</strong></h5>
+<ul>
+<li><strong>Dashboard</strong></li>
+</ul>
 <p><a href="https://bit.ly/3oQywix">https://bit.ly/3oQywix</a>
 <style>
 
