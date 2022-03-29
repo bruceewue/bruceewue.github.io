@@ -18,7 +18,7 @@
       
       <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
       <description>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供資料API。成果展示於本文末。
-Project Diagram Environment Develop: Ubuntu 20.04(WSL2) + python 3.9</description>
+Project Diagram Environment Development: Ubuntu 20.04(WSL2) + python 3.9</description>
     </item>
     
   </channel>
