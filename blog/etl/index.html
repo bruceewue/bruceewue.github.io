@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ETL with Airflow,Kafka,MongoDB">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/data"
+          class="text-primary">Data</a>
+        
+        <h2>Data pipeline (cryptocurrency)</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>30 November 2022</span>
+          
+        </div>
+        
+        <img src="https://bruceewue.github.io/images/post/" class="img-fluid w-100 mb-4" alt="Data pipeline (cryptocurrency)">
+        
+        <div class="content mb-5">
+          <p>This post demonstrates how to scrape live bitcoin price data using these tools: Airflow, MongoDB, and Kafka. The data is then saved to a NoSQL database (MongoDB) and periodically processed (ETL) to change the price unit from USD to GBP.</p>
+<h1 id="project-diagram">Project Diagram</h1>
+<p><img src="/images/post/etl_crypto/diagram.png" alt="diagram"></p>
+<h1 id="environment">Environment</h1>
+<p>Ubuntu 20.04 (WSL2) + python 3.8</p>
+<h1 id="data-source">Data source</h1>
+<p><img src="/images/post/etl_crypto/coincap.png" alt="coincap">
+Source: <a href="https://coincap.io/">coincap</a></p>
+<p>Utilize its API(<a href="https://api.coincap.io/v2/assets/bitcoin">coincap_api</a>) to scrape real-time (live) bitcoin data.</p>
+<h1 id="mongodb">MongoDB</h1>
+<p>NoSQL(aka &ldquo;not only SQL&rdquo;), which is different from relational databases, is used here due to the necessity to process high-speed and mass-produced data. NoSQL databases are designed for unstructured data and ideal for big data applications(schema-free).</p>
+<p><img src="/images/post/etl_crypto/mongodb.png" alt="MongoDB">
+Source:<a href="https://www.mongodb.com/">MongoDB</a></p>
+<p>Mapping relational database to MongoDB
+<img src="/images/post/etl_crypto/RDBMS_MongoDB_Mapping.jpg" alt="RDBMS_MongoDB">
+Source:<a href="https://beginnersbook.com/2017/09/mapping-relational-databases-to-mongodb/">RDBMS_MongoDB</a></p>
+<p>MongoDB stores data in BSON format(Binary JSON)， &ldquo;_id&rdquo; is an OBJECT not STRING. To prevent errors when extracting data from the database, we can convert it to STRING.</p>
+<p>We can use <a href="https://studio3t.com/">Studio3T</a> (free MongoDB GUI) to connect to our MongoDB database.</p>
+<p><img src="/images/post/etl_crypto/studio3T.png" alt="studio3T"></p>
+<h2 id="use-python-to-connect-to-mongodb">Use python to connect to mongoDB</h2>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">pymongo</span>
+client <span style="color:#666">=</span> pymongo<span style="color:#666">.</span>MongoClient<span style="color:#888">(</span><span style="color:#b83838">&#39;localhost&#39;</span><span style="color:#888">,</span> <span style="color:#444">27017</span><span style="color:#888">)</span>
+<span style="color:#888;font-style:italic">#load data from mongoDB to Pandas</span>
+database <span style="color:#666">=</span> client<span style="color:#888">[</span><span style="color:#b83838">&#34;db_test&#34;</span><span style="color:#888">]</span> <span style="color:#888;font-style:italic">#  Database Name</span>
+collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span> <span style="color:#888;font-style:italic"># Table Name</span>
+query <span style="color:#666">=</span> <span style="color:#888">{}</span>
+records <span style="color:#666">=</span> pd<span style="color:#666">.</span>DataFrame<span style="color:#888">(</span><span style="color:#388038">list</span><span style="color:#888">(</span>collection<span style="color:#666">.</span>find<span style="color:#888">(</span>query<span style="color:#888">)))</span>
+
+<span style="color:#888;font-style:italic"># insert data into mongoDB</span>
+df <span style="color:#666">=</span> pd<span style="color:#666">.</span>DataFrame<span style="color:#888">({</span><span style="color:#b83838">&#39;price&#39;</span><span style="color:#888">:</span> <span style="color:#888">[</span><span style="color:#b83838">&#39;12.4&#39;</span><span style="color:#888">,</span> <span style="color:#b83838">&#39;1.4&#39;</span><span style="color:#888">,</span> <span style="color:#b83838">&#39;2.6&#39;</span><span style="color:#888">]})</span>
+records <span style="color:#666">=</span> df<span style="color:#666">.</span>to_dict<span style="color:#888">(</span><span style="color:#b83838">&#39;records&#39;</span><span style="color:#888">)</span> 
+collection<span style="color:#666">.</span>insert_many<span style="color:#888">(</span>records<span style="color:#888">)</span>
+</code></pre></div><h1 id="kafka">Kafka</h1>
+<p>Apache Kafka is a popular open-source distributed event streaming platform designed to handle continuous streams of events in real-time. Because of the bottlenecks that might be caused when large amounts of data continue to be stored directly in the DB, we can consider using Kafka here.</p>
+<p><img src="/images/post/etl_crypto/kafka.png" alt="Kafka"></p>
+<p>Source:<a href="https://kafka.apache.org/">Kafka</a></p>
+<p>Three steps to implement for event streaming:</p>
+<ol>
+<li>To publish (write) and subscribe to (read) streams of events, including continuous import/export of your data from other systems.</li>
+<li>To store streams of events durably and reliably for as long as you want.</li>
+<li>To process streams of events as they occur or retrospectively.</li>
+</ol>
+<p>First, we need to start both Zookeper and Kafka services.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash">bin/zookeeper-server-start.sh config/zookeeper.properties
+
+bin/kafka-server-start.sh config/server.properties
+</code></pre></div><p>Open a terminal, create a new topic named &ldquo;kafka-topics&rdquo;</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash">bin/kafka-topics.sh --create --topic test-topic --bootstrap-server localhost:9092 --replication-factor <span style="color:#444">1</span> --partitions <span style="color:#444">1</span>
+</code></pre></div><ul>
+<li>Producers: client applications that publish (write) events to Kafka</li>
+<li>consumers: those that subscribe to (read and process) these events</li>
+</ul>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># producer.py</span>
+brokers<span style="color:#888">,</span> topic <span style="color:#666">=</span> <span style="color:#b83838">&#34;localhost:9092&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;coincap&#34;</span>
+producer <span style="color:#666">=</span> KafkaProducer<span style="color:#888">(</span>bootstrap_servers<span style="color:#666">=</span><span style="color:#888">[</span>brokers<span style="color:#888">])</span>
+url <span style="color:#666">=</span> <span style="color:#b83838">&#34;https://api.coincap.io/v2/assets/bitcoin&#34;</span>
+<span style="color:#2838b0">while</span> <span style="font-style:italic">True</span><span style="color:#888">:</span>
+    r <span style="color:#666">=</span> requests<span style="color:#666">.</span>get<span style="color:#888">(</span>url<span style="color:#888">)</span>
+    v <span style="color:#666">=</span> json<span style="color:#666">.</span>dumps<span style="color:#888">(</span>r<span style="color:#666">.</span>json<span style="color:#888">())</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>
+    k <span style="color:#666">=</span> datetime<span style="color:#666">.</span>now<span style="color:#888">()</span><span style="color:#666">.</span>strftime<span style="color:#888">(</span><span style="color:#b83838">&#34;%Y-%m-</span><span style="color:#b83838;text-decoration:underline">%d</span><span style="color:#b83838"> %H:%M:%S:</span><span style="color:#b83838;text-decoration:underline">%f</span><span style="color:#b83838">&#34;</span><span style="color:#888">)</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>  
+    producer<span style="color:#666">.</span>send<span style="color:#888">(</span>topic<span style="color:#888">,</span> key<span style="color:#666">=</span>k<span style="color:#888">,</span> value<span style="color:#666">=</span>v<span style="color:#888">)</span>
+    <span style="color:#888;font-style:italic"># time.sleep(5)</span>
+
+</code></pre></div><p>The following section is consumer, which receives the data and stores it in the DB</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># consumer.py</span>
+brokers<span style="color:#888">,</span> topic <span style="color:#666">=</span> <span style="color:#b83838">&#34;localhost:9092&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;coincap&#34;</span>
+consumer <span style="color:#666">=</span> KafkaConsumer<span style="color:#888">(</span>topic<span style="color:#888">,</span> bootstrap_servers<span style="color:#666">=</span><span style="color:#888">[</span>brokers<span style="color:#888">])</span>
+client <span style="color:#666">=</span> pymongo<span style="color:#666">.</span>MongoClient<span style="color:#888">(</span><span style="color:#b83838">&#34;localhost&#34;</span><span style="color:#888">,</span> <span style="color:#444">27017</span><span style="color:#888">)</span>
+database <span style="color:#666">=</span> client<span style="color:#888">[</span><span style="color:#b83838">&#34;db_test&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Database Name</span>
+collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Table Name</span>
+
+<span style="color:#2838b0">for</span> msg <span style="color:#a848a8">in</span> consumer<span style="color:#888">:</span>
+    dict_data <span style="color:#666">=</span> json<span style="color:#666">.</span>loads<span style="color:#888">(</span>msg<span style="color:#666">.</span>value<span style="color:#888">)</span>
+    dict_data<span style="color:#888">[</span><span style="color:#b83838">&#34;data&#34;</span><span style="color:#888">][</span><span style="color:#b83838">&#34;timestamp&#34;</span><span style="color:#888">]</span> <span style="color:#666">=</span> msg<span style="color:#666">.</span>key<span style="color:#666">.</span>decode<span style="color:#888">()</span>
+    collection<span style="color:#666">.</span>insert_many<span style="color:#888">([</span>dict_data<span style="color:#888">[</span><span style="color:#b83838">&#34;data&#34;</span><span style="color:#888">]])</span>
+</code></pre></div><h1 id="airflow">Airflow</h1>
+<p>Apache Airflow is a platform to programmatically author, schedule, and monitor workflows. I&rsquo;d like to automatically convert the price of bitcoin from USD to GBP and then store them in the DB.</p>
+<p>Before using Airflow, we need to set up the connection to the DB(MongoDB) via the Airflow Web UI. (default: pymongo)</p>
+<p><img src="/images/post/etl_crypto/airflow_mongo.png" alt="airflow_mongo"></p>
+<p>We need to add the folder &ldquo;dags&rdquo; under the airflow folder and then add a python file (.py) in the folder to define the three tasks of ETL in the DAG, namely Extract, Transform, and Load. They are expected to be executed sequentially at 00:30 every day. Here&rsquo;s a quick, simple, and free editor for cron schedule <a href="https://crontab.guru/">crontab.guru</a>, which can help us set the schedule_interval.</p>
+<ul>
+<li>dags/dag.py
+<img src="../../static/images/post/etl_crypto/dag_python.png" alt="Alt text"></li>
+</ul>
+<p><img src="/images/post/etl_crypto/dags.png" alt="dags"></p>
+<p>task1 -&gt; task2 -&gt; task3
+<img src="/images/post/etl_crypto/DAG.png" alt="DAG"></p>
+<p>Log
+<img src="/images/post/etl_crypto/log.png" alt="airflow_log"></p>
+<p>Result
+<img src="/images/post/etl_crypto/studio3T_GBP.png" alt="studio3T_GBP"></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://kafka.apache.org/intro">Kafka</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/">Airflow</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data">Data</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>
