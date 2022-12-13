@@ -12,16 +12,12 @@
     
     
     <item>
-      <title>AutoKeras&#43;ClearML</title>
+      <title>AutoKeras (AutoML)</title>
       <link>https://bruceewue.github.io/blog/autokeras/</link>
       <pubDate>Tue, 01 Mar 2022 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/blog/autokeras/</guid>
-      <description>在模型訓練的時候總是希望能得到較佳的模型參數與網路架構，如果仰賴自行調校可能會相對困難與耗時，所以希望透過AutoML工具來替我們完成。
-AutoKeras 本篇嘗試使用基於Keras的AutoML框架名為AutoKeras(使用超參數搜尋和ENAS(Efficient Neural Architecture Search))，也可以協助完成一些前處理手段(normalization,vectorization,encoding,..)。舉凡結構化資料，圖像資料，時間序列預測，多任務等都支援。
-Source: AutoKeras
-在官網範例中只要三行就可以完成訓練和預測
-import autokeras as ak clf = ak.</description>
+      <description>Greater model parameters and network design are always preferred for better performance during model training.</description>
     </item>
     
   </channel>

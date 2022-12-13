@@ -5,7 +5,7 @@
 
   <!-- mobile responsive meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="AutoML">
+  <meta name="description" content="AutoKeras with CLearML and TensorBoard">
   <meta name="author" content="Bruce Wu">
   <meta name="generator" content="Hugo 0.74.3" />
 
@@ -97,7 +97,7 @@
         <a href="/categories/machine-learning"
           class="text-primary">Machine learning</a>
         
-        <h2>AutoKeras+ClearML</h2>
+        <h2>AutoKeras (AutoML)</h2>
         <div class="mb-3 post-meta">
           <span>By Bruce Wu</span>
           
@@ -107,43 +107,50 @@
         </div>
         
         <div class="content mb-5">
-          <p>在模型訓練的時候總是希望能得到較佳的模型參數與網路架構，如果仰賴自行調校可能會相對困難與耗時，所以希望透過AutoML工具來替我們完成。</p>
-<h3 id="autokeras">AutoKeras</h3>
-<p>本篇嘗試使用基於Keras的AutoML框架名為<a href="https://autokeras.com/">AutoKeras</a>(使用超參數搜尋和ENAS(Efficient Neural Architecture Search))，也可以協助完成一些前處理手段(normalization,vectorization,encoding,..)。舉凡結構化資料，圖像資料，時間序列預測，多任務等都支援。</p>
+          <p>Greater model parameters and network design are always preferred for better performance during model training. Manually tuning these parameters and architecture can be difficult and time-consuming, so in this post, I&rsquo;ll attempt to use an AutoML tool called Autokeras to accelerate this process.</p>
+<h2 id="autokeras">AutoKeras</h2>
+<p><a href="https://autokeras.com/">AutoKeras</a> is an open-source AutoML tool based on Keras that automates designing and tuning machine learning models. It allows users to quickly and easily train high-performance models without extensive expertise in machine learning. By using Autokeras, we can save time and effort compared to manual tuning and train high-quality models for a variety of tasks.</p>
+<p>AutoKeras uses Efficient Neural Architecture Search (ENAS) to automate the process of designing and tuning machine learning models. It also includes support for a variety of preprocessing methods, such as normalization, vectorization, and encoding. AutoKeras can be used for a wide range of tasks, including structured data, image data, time series prediction, and multitasking.</p>
 <p><img src="/images/post/automl/autokeras.jpg" alt="auto_keras">
 Source: <a href="https://autokeras.com/">AutoKeras</a></p>
-<p>在官網範例中只要三行就可以完成訓練和預測</p>
+<p>The official website of AutoKeras provides examples that show how to use the tool in just a few lines of code.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">autokeras</span> <span style="color:#2838b0">as</span> <span style="color:#289870">ak</span>
 
+<span style="color:#888;font-style:italic"># Initialize the image classifier.</span>
 clf <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageClassifier<span style="color:#888">()</span>
+
+<span style="color:#888;font-style:italic"># Feed the image classifier with training data.</span>
 clf<span style="color:#666">.</span>fit<span style="color:#888">(</span>x_train<span style="color:#888">,</span> y_train<span style="color:#888">)</span>
-results <span style="color:#666">=</span> clf<span style="color:#666">.</span>predict<span style="color:#888">(</span>x_test<span style="color:#888">)</span>
-</code></pre></div><h3 id="environment">Environment</h3>
-<p>搭配Colab pro進行訓練，其基本模組與GPU已安裝並配置好，可以直接專注於程式碼開發相當方便，升級到pro之後目前較常分配到的顯卡是P100。</p>
+
+<span style="color:#888;font-style:italic"># Predict with the trained model.</span>
+predicted_y <span style="color:#666">=</span> clf<span style="color:#666">.</span>predict<span style="color:#888">(</span>x_test<span style="color:#888">)</span>
+</code></pre></div><h2 id="environment">Environment</h2>
+<p>With Colab Pro, some Python modules and GPU are already installed and configured in Colab so that we can focus on coding.</p>
 <p><img src="/images/post/automl/colab.jpg" alt="colab_pro"></p>
-<h3 id="example-1---fraud-detection">Example 1 - Fraud detection</h3>
-<p>案例是Kaggle上的信用卡詐欺偵測，屬於結構化資料的分類問題
-dataset: <a href="https://github.com/nsethi31/Kaggle-Data-Credit-Card-Fraud-Detection/blob/master/creditcard.csv">Kaggle-Data-Credit-Card-Fraud-Detection</a>
+<h2 id="example-1---fraud-detection">Example 1 - Fraud detection</h2>
+<p>The first case is a credit card fraud detection on Kaggle, which is a structured data classification problem</p>
+<p>dataset: <a href="https://github.com/nsethi31/Kaggle-Data-Credit-Card-Fraud-Detection/blob/master/creditcard.csv">Kaggle-Data-Credit-Card-Fraud-Detection</a>
 (284807 rows × 31 columns)</p>
 <p><img src="/images/post/automl/fraud_data.jpg" alt="fraud_data"></p>
-<p>使用StructuredDataClassifier處理結構資料分類問題。</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">cbs <span style="color:#666">=</span> <span style="color:#888">[</span>
-    <span style="color:#888;font-style:italic"># 連續三個周期訓練沒進步就換到下個模型</span>
+<p>The <em>StructuredDataClassifier</em> is used here to handle the structured data classification problem.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># StructuredDataClassifier</span>
+cbs <span style="color:#666">=</span> <span style="color:#888">[</span>
+    <span style="color:#888;font-style:italic"># Switch to the next model after three consecutive training cycles without improvement</span>
     <span style="color:#888;font-style:italic"># monitor default: val_loss</span>
     tf<span style="color:#666">.</span>keras<span style="color:#666">.</span>callbacks<span style="color:#666">.</span>EarlyStopping<span style="color:#888">(</span>patience<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">,</span>monitor<span style="color:#666">=</span><span style="color:#b83838">&#39;val_loss&#39;</span><span style="color:#888">),</span> 
-    <span style="color:#888;font-style:italic"># histogram_freq=1表示在每次訓練週期各統計一次，並以直方圖展示訓練時各層神經元weight,bias分布</span>
+    <span style="color:#888;font-style:italic"># histogram_freq=1 means to count once in each training cycle, and display the weight and bias distribution of each layer of neurons during training in a histogram</span>
     tf<span style="color:#666">.</span>keras<span style="color:#666">.</span>callbacks<span style="color:#666">.</span>TensorBoard<span style="color:#888">(</span>log_dir<span style="color:#666">=</span>logdir<span style="color:#888">,</span> histogram_freq<span style="color:#666">=</span><span style="color:#444">1</span><span style="color:#888">)</span>
 <span style="color:#888">]</span>
-<span style="color:#888;font-style:italic"># max_trials為嘗試模型的數量，預設值為100，可以在目錄下的oracle.json找到預設模型的的結構</span>
+<span style="color:#888;font-style:italic"># max_trials is the number of models to try, the default value is 100, you can find the structure of the default model in oracle.json in the directory</span>
 clf<span style="color:#666">=</span>ak<span style="color:#666">.</span>StructuredDataClassifier<span style="color:#888">(</span>max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
-<span style="color:#888;font-style:italic"># epoch 預設值1000，結合earlystopping可能提前結束</span>
+<span style="color:#888;font-style:italic"># The default value of epoch is 1000, and it may end early when using earlystopping</span>
 history<span style="color:#666">=</span>clf<span style="color:#666">.</span>fit<span style="color:#888">(</span>x_train<span style="color:#888">,</span>y_train<span style="color:#888">,</span>callbacks<span style="color:#666">=</span>cbs<span style="color:#888">,</span>epochs<span style="color:#666">=</span><span style="color:#444">25</span><span style="color:#888">)</span>
-</code></pre></div><p>除了直接使用<em>StructuredDataClassifier</em>之外，如需自訂模型架構、搜尋空間等也可使用<em>AutoModel</em>對模型做進一步設計，如下所示。</p>
+</code></pre></div><p>In addition to directly using <em>StructuredDataClassifier</em>, if you need to customize the model architecture, search space, etc., you can also use <em>AutoModel</em> to further design the model, as shown below.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">input_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>StructuredDataInput<span style="color:#888">()</span>
 output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>StructuredDataBlock<span style="color:#888">()(</span>input_node<span style="color:#888">)</span>
 output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ClassificationHead<span style="color:#888">()(</span>output_node<span style="color:#888">)</span>
 clf <span style="color:#666">=</span> ak<span style="color:#666">.</span>AutoModel<span style="color:#888">(</span>inputs<span style="color:#666">=</span>input_node<span style="color:#888">,</span> outputs<span style="color:#666">=</span>output_node<span style="color:#888">,</span> max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
-</code></pre></div><p>儲存與載入模型</p>
+</code></pre></div><p>Save and load models:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># Save model</span>
 <span style="color:#2838b0">try</span><span style="color:#888">:</span>
   <span style="color:#888;font-style:italic"># TensorFlow SavedModel format</span>
@@ -156,16 +163,16 @@ clf <span style="color:#666">=</span> ak<span style="color:#666">.</span>AutoMod
 <span style="color:#2838b0">from</span> <span style="color:#289870">tensorflow.keras.models</span> <span style="color:#2838b0">import</span> load_model
 loaded_model <span style="color:#666">=</span> load_model<span style="color:#888">(</span><span style="color:#b83838">&#39;./auto_model/best_model&#39;</span><span style="color:#888">,</span> 
 custom_objects<span style="color:#666">=</span>ak<span style="color:#666">.</span>CUSTOM_OBJECTS<span style="color:#888">)</span> 
-</code></pre></div><p>訓練過程 (Colab)
+</code></pre></div><p>Training process (Colab)
 <img src="/images/post/automl/fraud_train.jpg" alt="fraud_trainjpg"></p>
 <ul>
-<li>如果中斷訓練後再次執行，會依據已經紀錄的內容來接續訓練</li>
-<li>訓練完成後，AutoKeras會針對表現最好的模型，合併使用所有training set + validation set再完整的參與訓練一次。</li>
-<li>所有trial完成後，表現最佳的模型會自動存放在best_model/*</li>
-<li>由於本資料集存在類別不均衡的問題(imbalanced)，Autokeras也支援在fit()中設定class_weight來調整各類別的損失值(loss)比重，使模型更重視少數類別。</li>
+<li>If the training is interrupted and executed again, it will continue the training based on the records</li>
+<li>After the training is completed, AutoKeras will use all training set + validation set for training again with the best model.</li>
+<li>After all trials are completed, the model with the best performance will be automatically stored in <em>best_model/</em>*</li>
+<li>Due to the problem of category imbalance in this data set, Autokeras also supports setting <em>class_weight</em> in fit() for weighting the loss function, so that the model will pay more attention to minority categories.</li>
 </ul>
-<h4 id="training-visualization----tensorboard">Training Visualization  - TensorBoard</h4>
-<p>為了瞭解訓練過程，可以使用tensorboard讀取在callbck中儲存的log資料將訓練過程視覺化；利用免費的tensorboard.dev則可以產生公開的頁面方便與他人分享。</p>
+<h3 id="training-visualization----tensorboard">Training Visualization  - TensorBoard</h3>
+<p>To understand the training process, you can use tensorboard to read the log data stored in callback to visualize the training process; use the tensorboard.dev to generate a public page for sharing with others.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">tensorflow</span> <span style="color:#2838b0">as</span> <span style="color:#289870">tf</span>
 <span style="color:#2838b0">import</span> <span style="color:#289870">datetime</span>
 <span style="color:#2838b0">from</span> <span style="color:#289870">tensorboard.plugins.hparams</span> <span style="color:#2838b0">import</span> api <span style="color:#2838b0">as</span> hp
@@ -173,14 +180,13 @@ custom_objects<span style="color:#666">=</span>ak<span style="color:#666">.</spa
 <span style="background-color:#a848a8">!</span>tensorboard dev upload <span style="color:#666">--</span>logdir logs \
   <span style="color:#666">--</span>name <span style="color:#b83838">&#34;Simple experiment&#34;</span> \
   <span style="color:#666">--</span>description <span style="color:#b83838">&#34;fraud detect&#34;</span> \
-</code></pre></div><p>在訓練前執行以上程式片段並勾選&quot;Reload data&rdquo;，訓練時數據就會隨著更新。</p>
-<p>訓練過程的accuracy與loss變化
+</code></pre></div><p>Execute the above program fragment and check &ldquo;Reload data&rdquo; before training, and the data will be updated during training.</p>
+<p>Accuracy and loss changes during training
 <img src="/images/post/automl/tbdev.jpg" alt="tbdev"></p>
-<p>模型結構
+<p>Model architecture
 <img src="/images/post/automl/tbdev2.jpg" alt="tbdev2"></p>
-<h4 id="clearml">ClearML</h4>
-<p>如果希望監控並追蹤實驗結果，也希望多人一起共享實驗記錄，也可以使用支援AutoKeras的MLOps平台<a href="https://clear.ml/">ClearML</a>，以互動示網頁呈現。</p>
-<p>from clearml import Task</p>
+<h3 id="clearml">ClearML</h3>
+<p>If you want to monitor and track the results and share the experiments with people, you can also use the MLOps platform <a href="https://clear.ml/">ClearML</a> that supports AutoKeras to present it on an interactive web page.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">from</span> <span style="color:#289870">clearML</span> <span style="color:#2838b0">import</span> Task
 <span style="color:#888;font-style:italic"># register at https://app.community.clear.ml</span>
 <span style="color:#888;font-style:italic"># get the &#39;key&#39; and &#39;secret&#39;：</span>
@@ -194,36 +200,34 @@ Task<span style="color:#666">.</span>set_credentials<span style="color:#888">(</
 <span style="color:#888;font-style:italic"># Create a new ClearML task</span>
 <span style="color:#888;font-style:italic"># Visit https://app.community.clear.ml/dashboard</span>
 task <span style="color:#666">=</span> Task<span style="color:#666">.</span>init<span style="color:#888">(</span>project_name<span style="color:#666">=</span><span style="color:#b83838">&#39;autokeras age&#39;</span><span style="color:#888">,</span> task_name<span style="color:#666">=</span><span style="color:#b83838">&#39;age regressor&#39;</span><span style="color:#888">)</span>
-</code></pre></div><p>ClearML主頁面中可查看project overview
+</code></pre></div><p>The project overview is on the ClearML main page
 <img src="/images/post/automl/clearml0.jpg" alt="clearml0"></p>
-<p>除了訓練過程loss,accuracy變化趨勢，也包含機器的使用狀況
+<p>In addition to the loss and accuracy during training, it also includes the machine&rsquo;s status.
 <img src="/images/post/automl/clearml2.jpg" alt="clearml2">
 <img src="/images/post/automl/clearml.jpg" alt="clearml"></p>
-<p>模型中weight,bias的變化
+<p>Changes in weight and bias in the model
 <img src="/images/post/automl/clearml3.jpg" alt="clearml3"></p>
 <ul>
-<li>ClearML也會自動上傳記錄matplotlib跟seaborn儲存在其監控目錄的結果</li>
+<li>ClearML will also show the results through the library <em>matplotlib</em> and <em>seaborn</em></li>
 </ul>
-<h3 id="example-2---age-prediction">Example 2 - Age prediction</h3>
-<p>另一個範例是年齡預測，透過照片來預測年齡，屬於迴歸問題。
-Dataset: <a href="https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar">wiki_crop</a>，
-經圖像篩選以及前處理後，轉換成52984張128*128的圖片。</p>
-<p>Training data
+<h2 id="example-2---age-prediction">Example 2 - Age prediction</h2>
+<p>This example is about age prediction, which is a regression problem to predict age from photos.</p>
+<p>(Dataset: <a href="https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/wiki_crop.tar">wiki_crop</a>)</p>
+<p>After image filtering and pre-processing, the images were converted to 52984 128*128 images.</p>
+<p>Training data:
 <img src="/images/post/automl/age_train.jpg" alt="age_train"></p>
-<p>使用AutoModel可進行模型細節自定義，寫法上很像Keras函數式API(Functional API)，AutoKeras再從我們給的條件下，從中找到最佳結果。</p>
+<p>Use AutoModel to customize model details, which is similar to Keras functional API. AutoKeras then finds the best result from the conditions we give.</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">input_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageInput<span style="color:#888">()</span>
 <span style="color:#888;font-style:italic"># If just want to try EfficientNet b0~b7</span>
 output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>ImageBlock<span style="color:#888">(</span>block_type<span style="color:#666">=</span><span style="color:#b83838">&#39;efficient&#39;</span><span style="color:#888">,</span> normalize<span style="color:#666">=</span><span style="font-style:italic">True</span><span style="color:#888">,</span> augment<span style="color:#666">=</span><span style="font-style:italic">True</span><span style="color:#888">)(</span>input_node<span style="color:#888">)</span>
 output_node <span style="color:#666">=</span> ak<span style="color:#666">.</span>RegressionHead<span style="color:#888">(</span>droupout<span style="color:#666">=</span><span style="color:#444">0.25</span><span style="color:#888">)(</span>output_node<span style="color:#888">)</span>
 reg <span style="color:#666">=</span> ak<span style="color:#666">.</span>AutoModel<span style="color:#888">(</span>inputs<span style="color:#666">=</span>input_node<span style="color:#888">,</span>outputs<span style="color:#666">=</span>output_node<span style="color:#888">,</span> max_trials<span style="color:#666">=</span><span style="color:#444">3</span><span style="color:#888">)</span>
-</code></pre></div><p>在簡單訓練幾個epoch後的成果(Testing)
+</code></pre></div><p>Testing results after a few epochs of simple training
 <img src="/images/post/automl/age_result.jpg" alt="age_result"></p>
-<ul>
-<li>AutoKeras也支援處理Multi-modal資料跟multi-task模型的問題，利用AutoModel來自定義更複雜的模型結構。例如下圖包含兩種類型的輸入資料，而最後須同時預測分類標籤以及迴歸數值。</li>
-</ul>
-<p><img src="/images/post/automl/multi.jpg" alt="multi">
-Source: <a href="https://autokeras.com/tutorial/multi/">Multi-Modal and Multi-Task</a></p>
-<h3 id="additional-resources">Additional Resources</h3>
+<p>AutoKeras also supports dealing with Multi-modal data and multi-task models, using AutoModel to customize complex model architecture. For example, the figure below contains two types of input data, and finally, the classification label and regression value have to be predicted at the same time.</p>
+<p><img src="/images/post/automl/multi.jpg" alt="multi"></p>
+<p>Source: <a href="https://autokeras.com/tutorial/multi/">Multi-Modal and Multi-Task</a></p>
+<h2 id="additional-resources">Additional Resources</h2>
 <ul>
 <li><a href="https://autokeras.com/">AutoKeras</a></li>
 <li><a href="https://colab.research.google.com/github/tensorflow/tensorboard/blob/master/docs/tbdev_getting_started.ipynb">Getting started with TensorBoard.dev</a></li>
