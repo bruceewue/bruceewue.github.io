@@ -12,24 +12,12 @@
     
     
     <item>
-      <title>Job Scraping and Analysis</title>
+      <title>Project - Job Scraping and Analysis</title>
       <link>https://bruceewue.github.io/blog/job_scrape/</link>
       <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
-      <description>因為想了解英國倫敦當地工程師就業的情況，利用空餘時間做了一套職缺分析系統(目前以data相關職缺為主)，包含自動排程分散式爬蟲、職缺分析儀表版，並另提供資料API。成果展示於本文末。
-Project Diagram Environment Development: Ubuntu 20.04(WSL2) + python 3.9</description>
-    </item>
-    
-    <item>
-      <title>Create COVID-19 Dashboard by Data studio</title>
-      <link>https://bruceewue.github.io/blog/covid_dashboard/</link>
-      <pubDate>Wed, 10 Mar 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/covid_dashboard/</guid>
-      <description>自己來動手製作的COVID-19 Dashboard吧，本篇將透過GCP雲端服務自動抓取最新的疫情資料，並使用Google的可視化工具Data studio串接來製作每日自動更新的疫情儀表板。
-Data source CSSEGISandData/COVID-19
-Diagram 透過Cloud Scheduler定時觸發Cloud Functions中部署的爬蟲程式,並將資料儲存至Cloud Storage，並由Data Studio即時讀取最新資料並製作COVID-19即時資訊儀表板。</description>
+      <description>Since I&amp;rsquo;d like to know the situation of local data-related vacancies in London, England, I have built a job vacancy analysis system, including a distributed crawler with automatic scheduling, a job vacancy analysis dashboard, and a data API.</description>
     </item>
     
   </channel>

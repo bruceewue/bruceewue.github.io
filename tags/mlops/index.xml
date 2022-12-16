@@ -6,22 +6,13 @@
     <description>Recent content in MLOps on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Tue, 01 Mar 2022 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Fri, 03 Dec 2021 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/mlops/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>AutoKeras (AutoML)</title>
-      <link>https://bruceewue.github.io/blog/autokeras/</link>
-      <pubDate>Tue, 01 Mar 2022 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/autokeras/</guid>
-      <description>Greater model parameters and network design are always preferred for better performance during model training.</description>
-    </item>
-    
-    <item>
-      <title>ML Model Deployment</title>
+      <title>Project - ML Model Deployment</title>
       <link>https://bruceewue.github.io/blog/ml_deployment/</link>
       <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
       

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Redash on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/tags/redash/</link>
+    <description>Recent content in Redash on Bruce Wu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Fri, 04 Feb 2022 10:07:47 +0600</lastBuildDate>
+    
+	<atom:link href="https://bruceewue.github.io/tags/redash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Project - Job Scraping and Analysis</title>
+      <link>https://bruceewue.github.io/blog/job_scrape/</link>
+      <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
+      <description>Since I&amp;rsquo;d like to know the situation of local data-related vacancies in London, England, I have built a job vacancy analysis system, including a distributed crawler with automatic scheduling, a job vacancy analysis dashboard, and a data API.</description>
+    </item>
+    
+  </channel>
+</rss>
