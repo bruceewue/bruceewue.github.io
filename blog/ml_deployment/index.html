@@ -107,100 +107,94 @@
         </div>
         
         <div class="content mb-5">
-          <p>在學習了眾多機器學習、資料分析等方法後不禁思考:下一步呢? 該如何讓建立的模型或分析的成果能實際落地提供使用?</p>
-<p>本篇以天池競賽中的製造業數據為例，創建機器學習系統，包含模型建置、API服務部署及系統監控，並結合CICD將流程自動化。</p>
+          <p>After learning machine learning and data analysis methods, I can&rsquo;t help but think: what&rsquo;s next? How can we make the models or analysis results we build usable? This post uses data from the manufacturing industry in the Tianchi Big Data Competition as an example to create a machine learning system, including model building, API service deployment, and system monitoring and utilises a CICD tool to automate the process.</p>
 <h3 id="data-source">Data source</h3>
-<p>本數據集是關於化工連續製程的數據，目標是希望預測Yield，屬於迴歸問題(regression)，本案例中模擬從AWS S3取得資料</p>
+<p>This dataset is about chemical continuous process data, and the goal is to predict Yield, which is a regression problem. In this project, I retrieve data from AWS S3.</p>
 <p><a href="https://tianchi.aliyun.com/competition/entrance/231695/information">Digital Manufacturing Algorithm Competition of JinNan Tianjin</a></p>
 <h3 id="model-deployment">Model Deployment</h3>
-<p>要建立一個機器學習系統，ML code可能只佔相當小的一部份，大多數會是在處理處理資料蒐集、特徵工程、部署、系統監控等等
-<img src="/images/post/ML_architecture.jpg" alt="image info">
+<p>When building a machine learning system, the ML code may only take up a small portion; most of the work would be in handling data collection, feature engineering, deployment, system monitoring, etc.</p>
+<p><img src="/images/post/ML_deployment/ML_architecture.jpg" alt="image info">
 Source:<a href="https://papers.nips.cc/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf">Hidden Technical Debt in Machine Learning Systems(2015)</a></p>
-<p>以機器學習建模來說，一般會經過Data validation-&gt;Feature engineering-&gt;Model training-&gt;Model deployment。機器學習系統比起傳統IT系統多了Data+Model，以致較難以明確規範系統行為；其中要注意的是&rdquo;<em>Reproducibility</em>&rdquo;, 意思是在上述各個流程模組中，必須確保當給定一樣的Input就應該得到一樣的Output，這是ML系統所面臨的重要挑戰；另外也是必須針對系統撰寫測試(Testing)的重要原因，期望能降低系統發生非預期行為(Uncertainty)的風險。</p>
-<p>那該如何確保&rdquo;<em>Reproducibility</em>&rdquo;? 基本有三個方向</p>
+<p>Machine learning modelling follows the data validation process -&gt; Feature engineering -&gt; Model training -&gt; Model deployment. Machine learning systems have more Data + Models than traditional IT systems, making it more challenging to regulate system behaviour. One important thing to note is &ldquo;<em>Reproducibility</em>&rdquo;, which means that the process mentioned above modules must ensure that the same Output is obtained when given the same Input. It is also an important reason we need testing for the system, with the expectation of reducing the risk of the system behaving unexpectedly(Uncertainty).</p>
+<p>To ensure &ldquo;<em>Reproducibility</em>&rdquo;,  there are three ways:</p>
 <ol>
-<li>版本控制 (Version Control)</li>
-<li>盡可能設置Seed (if require randomness)</li>
-<li>使用容器 (Container)</li>
+<li>Use version control to keep track of changes to the code and data.</li>
+<li>Set seed as much as possible if randomness is required.</li>
+<li>Use containerisation, such as Docker, to package the application and its dependencies together in a portable container, ensuring that the application runs consistently across different environments.</li>
 </ol>
 <h3 id="end-to-end-ml-system">End-to-end ML system</h3>
-<p>下圖為建構端到端ML系統的流程，並且可能會不斷地迭代。
-<img src="/images/post/cd4ml-end-to-end.png" alt="end-to-end">
+<p>The following diagram shows the process of building an end-to-end ML system, which may iterate continuously.
+<img src="/images/post/ML_deployment/cd4ml-end-to-end.png" alt="end-to-end">
 Source: <a href="https://martinfowler.com/articles/cd4ml.html">Continuous Delivery for Machine Learning end-to-end process</a></p>
-<p>下圖是在學習機器學習部署的過程所歸納整理，本案例也參考這樣的設計來構建系統
-<img src="/images/post/ML-system.png" alt="MLsystem"></p>
-<p>以下針對幾點說明</p>
+<p>This project references the following architecture to construct a machine learning system.</p>
+<p><img src="/images/post/ML_deployment/ML-system.png" alt="MLsystem"></p>
+<p>Below are explanations for several points:</p>
 <h3 id="productionize-model">Productionize Model</h3>
-<p>其實我們要部署的並非只有模型本身，而是整個從資料處理到建模部署的pipeline。在這部分會將特徵工程、建模等一系列步驟透過<em>sklearn.pipeline</em>進行封裝，將訓練完的模型(.pkl)給予版本並將前處理、模型訓練、設定檔等打包成package並推送至Python package index server,常見的有公開的PyPI,而此處是使用<a href="https://gemfury.com/">gemfury</a>,為的是能夠建立不公開的Package Repository</p>
-<h3 id="deploymentsering-the-model-via-api">Deployment(Sering the model via API)</h3>
-<p>在部署的部分，此處採用Python 3.6+之支援異步高效能框架<em>FastAPI</em>，好處是可以自動生成openAPI sepc並且可以簡單的直接使用Pydantic進行Schema Validation。</p>
-<p><img src="/images/post/fastapi.jpg" alt="Fastapi">
+<p>We need to deploy not just the model itself but the entire pipeline from data processing to model deployment. In this part, We will package a series of steps such as feature engineering and modelling through <em>sklearn.pipeline</em>, and give the trained model (.pkl) a version number and package the preprocessing, model training, and configuration into a package and push it to the Python package index server. Commonly used is the  PyPI, while here, I use <a href="https://gemfury.com/">gemfury</a> to create a non-public Package Repository.</p>
+<h3 id="deploymentserving-the-model-via-api">Deployment(Serving the model via API)</h3>
+<p>In the deployment part, this uses the Python 3.6+ supported high-performance asynchronous framework <em>FastAPI</em>, which has the advantage of automatically generating openAPI spec and can easily use <em>Pydantic</em> for schema validation.</p>
+<p><img src="/images/post/ML_deployment/fastapi.jpg" alt="Fastapi">
 Source: <a href="https://github.com/tiangolo/fastapi">tiangolo/fastapi</a></p>
-<p>下圖是本例的API docs
-<img src="/images/post/API-doc.jpg" alt="API-doc"></p>
-<p>在應用的部署上會透過Docker將服務容器化，由於需要運作多個服務(MLAPI, Prometheus, Grafana, cAdvisor)，此處會透過docker-compose一次啟動</p>
+<p>The following is an example of the API docs
+<img src="/images/post/ML_deployment/API-doc.jpg" alt="API-doc"></p>
+<p>In the deployment, the service will be containerised through Docker. Since multiple services (MLAPI, Prometheus, Grafana, cAdvisor) are required to launch, this will start them up at once using docker-compose.</p>
 <h5 id="why-docker-for-ml">Why docker for ML?</h5>
 <ul>
-<li>重現性(Reproducibility): 以確保每次運行結果一致</li>
-<li>可擴展性(Scalibility): 各大雲端皆支援，易於整合</li>
-<li>隔離性(Isolation): 確保服務獨立運作且資源隔離(Process Isolation)</li>
-<li>維護性(Maintainability): 環境易設定且可攜帶使團隊間容易分享
-<img src="/images/post/docker-flow.png" alt="docker-flow">
-Source: <a href="https://denibertovic.com/talks/supercharge-development-env-using-docker/#/11">SUPERCHARGE YOUR DEVELOPMENT ENVIRONMENT (USING DOCKER)</a></li>
+<li><strong>Reproducibility</strong>: ensures consistent results every time the model is run</li>
+<li><strong>Scalability</strong>: supported by all major cloud platforms and easy to integrate</li>
+<li><strong>Isolation</strong>: ensures independent operation of services and resource isolation (Process Isolation)</li>
+<li><strong>Maintainability</strong>: easy to set up environment and portable, making it easy to share among teams.</li>
 </ul>
+<p><img src="/images/post/ML_deployment/docker-flow.png" alt="docker-flow">
+Source: <a href="https://denibertovic.com/talks/supercharge-development-env-using-docker/#/11">SUPERCHARGE YOUR DEVELOPMENT ENVIRONMENT (USING DOCKER)</a></p>
 <h5 id="deploy-to-cloud">Deploy to Cloud</h5>
-<p>可以將應用部署上雲端以提供服務，可以選擇是PaaS或是IaaS，此處各選擇Heroku 以及 AWS 來部署，PaaS 或是 IaaS的差異如下圖，選擇IaaS的話有較多部份需要自己管理，但也相對較為彈性。
-<img src="/images/post/paas-iaas.jpg" alt="Infra">
+<p>The application can be deployed on the cloud to provide services; we can choose PaaS or IaaS. Here, Heroku and AWS are selected to deploy. The difference between PaaS and IaaS is as follows, if you choose IaaS, you will have more parts to manage yourself, but also relatively more flexible.</p>
+<p><img src="/images/post/ML_deployment/paas-iaas.jpg" alt="Infra">
 Source: <a href="https://www.redhat.com/en/topics/cloud-computing/what-is-paas">RedHat</a></p>
-<p>此處以AWS部署為例，使用到的服務有</p>
-<ul>
-<li>
-<p>Elastic Container Registry(ECR): 將打包好的image上傳到此存放，供其他AWS服務存取
-<img src="/images/post/ECR.jpg" alt="ECR"></p>
-</li>
-<li>
-<p>Amazon Elastic Container Service(ECS):AWS上管理Dokcer container的服務，下圖為ECS的架構，需先創建一個Cluster在定義內部的Service與Task</p>
-<p><img src="/images/post/ECS-diagram.jpg" alt="ECS-diagram">
+<p>Elastic Container Registry (ECR): upload the docker images to this storage for other AWS services to access.
+<img src="/images/post/ML_deployment/ECR.jpg" alt="ECR"></p>
+<p>Amazon Elastic Container Service (ECS):  manage Docker containers. The following diagram shows the architecture of ECS. A cluster must be created first, and then the internal service and task should be defined.</p>
+<p><img src="/images/post/ML_deployment/ECS-diagram.jpg" alt="ECS-diagram">
 Source: AWS</p>
-</li>
-</ul>
-<p>下圖為本案例實作時所創建的Cluster，並且創建了一個名為custom-service的服務
-<img src="/images/post/ECS.jpg" alt="ECS"></p>
+<p>The following diagram shows the cluster created in this case, and a service named &ldquo;custom-service&rdquo; was created.</p>
+<p><img src="/images/post/ML_deployment/ECS.jpg" alt="ECS"></p>
 <h3 id="monitoring">Monitoring</h3>
-<p>透過Prometheus與Grafana的搭配來搭建監控儀表板。下圖為Prometheus架構，透過HTTP的PULL方式週期性抓取並儲存時間序列資料，只要提供對應的HTTP介面並且符合 Promethues 定義的格式即可監控；且有提供PromQL語言進行查詢再透過Grafana進行資料可視化，當異常發生時也可以設置alert警報。</p>
-<p><img src="/images/post/prometheus.png" alt="prometheus">
+<p>The dashboard is built by using Prometheus and Grafana. The following diagram shows the Prometheus architecture, which periodically retrieves and stores time series data through the HTTP <em>pull</em> method. As long as the corresponding HTTP interface and the format defined by Prometheus are provided, it can be monitored; it also provides PromQL language for querying and data visualisation through Grafana, and alerts can be set when an anomaly occurs.</p>
+<p><img src="/images/post/ML_deployment/prometheus.png" alt="prometheus">
 Source: <a href="https://prometheus.io/docs/introduction/overview/">Prometheus</a></p>
-<p>本案例在監控的部分主要分三個部分:</p>
+<p>This project includes three parts in monitoring.</p>
 <ol>
-<li>Docker Monitoring: 用於監控Docker系統資源，使用工具:<a href="https://github.com/google/cadvisor">google/cAdvisor</a>
-<img src="/images/post/cAdvisor.jpg" alt="cAdvisor">
-Source: 8bitmen.com</li>
+<li>Docker Monitoring: used to monitor Docker system resources, using the tool:<a href="https://github.com/google/cadvisor">google/cAdvisor</a></li>
 </ol>
-<p>下圖為案例示範，主要針對四個服務的CPU跟記憶體進行監控
-<img src="/images/post/docker-monitor.jpg" alt="docker-monitor"></p>
+<p><img src="/images/post/ML_deployment/cAdvisor.jpg" alt="cAdvisor">
+Source: 8bitmen.com</p>
+<ul>
+<li>The following diagram demonstrates the case, mainly monitoring the CPU and memory of four services.
+<img src="/images/post/ML_deployment/docker-monitor.jpg" alt="docker-monitor"></li>
+</ul>
 <ol start="2">
-<li>Model Monitoring: 可以針對模型的預測值進行監控
-<ul>
-<li>每單位時間有多少預測值，是否發生異常</li>
-<li>監控模型的預測值在不同時間點是否發生顯著變化(可搭配Z-score/SEM/STD等統計資訊)</li>
-</ul>
-</li>
-<li>Log
-<ul>
-<li>可以用ELK Stack進行</li>
-</ul>
-</li>
+<li>Model Monitoring: monitoring the predicted values of the model</li>
 </ol>
-<p>如果有text類型資料，Kibana相對Grafana適合，時間序列DB可能因high cardinality造成performance的問題</p>
+<ul>
+<li>Number of predicted values per unit of time, whether there is an abnormal</li>
+<li>Monitor whether the predicted value of the model has significant changes at different times (with Z-score/SEM/STD or other statistical methods)</li>
+</ul>
+<ol start="3">
+<li>Log Monitoring: achieved through ELK Stack.</li>
+</ol>
+<ul>
+<li>If there is text-type data, Kibana is more suitable than Grafana; time series DB may cause performance problems due to high cardinality.</li>
+</ul>
+<p>Data drift problem in the input data is also another one that must be monitored.</p>
 <h3 id="continuous-integrationcontinuous-deploymentcicd">Continuous Integration/Continuous Deployment(CI/CD)</h3>
-<p>主要是希望能將應用開發測試與部署的每個階段自動化，可讓系統是在一個&quot;always releasable&quot;的狀態，且整個過程標準化、透明化並易於追蹤。CI/CD的工具相當多，此處使用的工具是CircleCI
-<img src="/images/post/circleci.jpg" alt="ciecleci">
+<p>The main goal is to automate every stage of application development, testing, and deployment, making the system &ldquo;always releasable&rdquo;, standardised and making the process transparent and easy to trace. Many CI/CD tools are available, and I use CircleCI in this project.</p>
+<p><img src="/images/post/ML_deployment/circleci.jpg" alt="ciecleci">
 Source:<a href="https://circleci.com/">CircleCI</a></p>
-<p>首先須撰寫設定檔<em>config.yml</em>，透過定義各種job跟steps來定義流程中的每個步驟，包含所需的環境或設定，所要執行的指令等等。CircleCI可以方便地與github專案連動，當新開一個Pull request，或後續該分支的commit時，就會觸發jobs。</p>
-<p>下圖為本案範例，當test_app(mlapi的單元測試與整合測試)通過後，才進行應用的部署，並且只有在merger到main並給予該commit tag後才進行model package的上傳發佈。</p>
-<p><img src="/images/post/cicd_flow.jpg" alt="cicd_flow"></p>
-<p>下圖以&quot;test_app&quot;這個job為例，其中tox是一款python自動化測試工具，可以整合pytest一起使用。
-<img src="/images/post/cicd_testapp.jpg" alt="cicd_testapp"></p>
+<p>First, we need a configuration file, &ldquo;config.yml&rdquo;, to define jobs and steps describing each step in the process, including the required environment or settings, commands to be executed, etc. CircleCI can easily connect with Github projects. When a new pull request is created, or subsequent commits are made to the branch, it triggers jobs.</p>
+<p>The figure below is an example where the application is deployed when the test_app (unit and integration tests for mlapi) pass. Only when it is merged into the main branch and given the commit tag does the model package upload and release.</p>
+<p><img src="/images/post/ML_deployment/cicd_flow.jpg" alt="cicd_flow"></p>
+<p>The figure below is an example of the &ldquo;test_app&rdquo; job, where <em>Tox</em> is a Python automated testing tool that can be integrated with <em>Pytest</em>.</p>
+<p><img src="/images/post/ML_deployment/cicd_testapp.jpg" alt="cicd_testapp"></p>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
 <li><a href="https://www.udemy.com/course/deployment-of-machine-learning-models/">Deployment of Machine Learning Models</a> - Online Course</li>

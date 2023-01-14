@@ -17,10 +17,7 @@
       <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>在學習了眾多機器學習、資料分析等方法後不禁思考:下一步呢? 該如何讓建立的模型或分析的成果能實際落地提供使用?
-本篇以天池競賽中的製造業數據為例，創建機器學習系統，包含模型建置、API服務部署及系統監控，並結合CICD將流程自動化。
-Data source 本數據集是關於化工連續製程的數據，目標是希望預測Yield，屬於迴歸問題(regression)，本案例中模擬從AWS S3取得資料
-Digital Manufacturing Algorithm Competition of JinNan Tianjin</description>
+      <description>After learning machine learning and data analysis methods, I can&amp;rsquo;t help but think: what&amp;rsquo;s next?</description>
     </item>
     
   </channel>
