@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>AWS on Bruce Wu&#39;s Blog</title>
-    <link>https://bruceewue.github.io/tags/aws/</link>
-    <description>Recent content in AWS on Bruce Wu&#39;s Blog</description>
+    <title>Kubernetes on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/tags/kubernetes/</link>
+    <description>Recent content in Kubernetes on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
     <lastBuildDate>Tue, 14 Feb 2023 10:07:47 +0600</lastBuildDate>
     
-	<atom:link href="https://bruceewue.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://bruceewue.github.io/tags/kubernetes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,15 +18,6 @@
       
       <guid>https://bruceewue.github.io/blog/ml_k8s_eks/</guid>
       <description>In this article, I&amp;rsquo;ll explore how to deploy an existing Keras model to AWS-EKS using TensorFlow Serving and Kubernetes.</description>
-    </item>
-    
-    <item>
-      <title>Project - ML Model Deployment</title>
-      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
-      <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>After learning machine learning and data analysis methods, I can&amp;rsquo;t help but think: what&amp;rsquo;s next?</description>
     </item>
     
   </channel>

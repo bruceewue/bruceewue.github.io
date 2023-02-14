@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Deploy an existing Keras model to AWS-EKS using TensorFlow Serving and Kubernetes">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/machine-learning"
+          class="text-primary">Machine learning</a>
+        
+        <h2>Model Deployment (K8s and EKS)</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>14 February 2023</span>
+          
+        </div>
+        
+        <div class="content mb-5">
+          <p>In this article, I&rsquo;ll explore how to deploy an existing Keras model to AWS-EKS using TensorFlow Serving and Kubernetes. TensorFlow Serving is a flexible and high-performance system for serving machine learning models, and Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications.</p>
+<p>To deploy a Keras model to AWS-EKS, we will first need to package the model using TensorFlow Serving. We will then create a Kubernetes deployment that includes a container running the TensorFlow Serving image, which will serve our model. The diagram below illustrates the architecture of the deployment, with the yellow circles indicating the components that will be deployed to Kubernetes.</p>
+<p><img src="/images/post/ML_K8S_EKS/Overview.png" alt="Overview"></p>
+<p>In this project, we have two key components:</p>
+<ol>
+<li>
+<p>Gateway, which downloads images, resizes them, and turns them into a numpy array. This is computationally inexpensive and can be done using a CPU.</p>
+</li>
+<li>
+<p>Model, which involves matrix multiplications that are computationally expensive. Therefore, we might need to use GPUs to handle this component.</p>
+</li>
+</ol>
+<p>The advantage of this setup is that the two components can be scaled independently. For example, we may need five gateway instances but only two instances of TF Serving with high-performance GPUs to handle the computationally expensive model component.</p>
+<h3 id="tensorflow-serving">TensorFlow Serving</h3>
+<p>TensorFlow Serving is an open-source platform for serving machine learning models. It provides a flexible, high-performance serving system for deploying TensorFlow models in production environments. With TensorFlow Serving, you can quickly deploy new models and run experiments while maintaining the same server architecture and APIs. It provides a gRPC interface for clients to send prediction requests and receive responses.</p>
+<p>First, convert the existing Keras model.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># convert.py</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">tensorflow</span> <span style="color:#2838b0">as</span> <span style="color:#289870">tf</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">tensorflow</span> <span style="color:#2838b0">import</span> keras
+model <span style="color:#666">=</span> keras<span style="color:#666">.</span>models<span style="color:#666">.</span>load_model<span style="color:#888">(</span><span style="color:#b83838">&#39;./clothing-model.h5&#39;</span><span style="color:#888">)</span>
+<span style="color:#888;font-style:italic"># Convert the model to TF format</span>
+tf<span style="color:#666">.</span>saved_model<span style="color:#666">.</span>save<span style="color:#888">(</span>model<span style="color:#888">,</span><span style="color:#b83838">&#39;clothing-model&#39;</span><span style="color:#888">)</span>  
+</code></pre></div><h3 id="containerization">Containerization</h3>
+<p>Next, we need to containerize the model and gateway, and create separate Docker images for each. To enable communication between the gateway and model containers, we can use docker-compose.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Docker" data-lang="Docker"><span style="color:#888;font-style:italic">#image-model.dockerfile</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">FROM</span><span style="color:#b83838"> tensorflow/serving:2.7.0</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">COPY</span> clothing-model /models/clothing-model/1<span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">ENV</span> <span style="color:#b04040">MODEL_NAME</span><span style="color:#666">=</span><span style="color:#b83838">&#34;clothing-model&#34;</span><span style="background-color:#a848a8">
+</span></code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Docker" data-lang="Docker"><span style="color:#888;font-style:italic">#image-gateway.dockerfile</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">FROM</span><span style="color:#b83838"> python:3.8.12-slim</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">RUN</span> pip install pipenv<span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">WORKDIR</span><span style="color:#b83838"> /app</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">COPY</span> <span style="color:#666">[</span><span style="color:#b83838">&#34;Pipfile&#34;</span>, <span style="color:#b83838">&#34;Pipfile.lock&#34;</span>, <span style="color:#b83838">&#34;./&#34;</span><span style="color:#666">]</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">RUN</span> pipenv install --system --deploy<span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">COPY</span> <span style="color:#666">[</span><span style="color:#b83838">&#34;gateway.py&#34;</span>, <span style="color:#b83838">&#34;proto.py&#34;</span>, <span style="color:#b83838">&#34;./&#34;</span><span style="color:#666">]</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">EXPOSE</span><span style="color:#b83838"> 9696</span><span style="background-color:#a848a8">
+</span><span style="background-color:#a848a8"></span><span style="color:#2838b0">ENTRYPOINT</span> <span style="color:#888">[</span><span style="color:#b83838">&#34;gunicorn&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;--bind=0.0.0.0:9696&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;gateway:app&#34;</span><span style="color:#888">]</span><span style="background-color:#a848a8">
+</span></code></pre></div><h3 id="kubernetes-k8s">Kubernetes (K8s)</h3>
+<p><img src="/images/post/ML_K8S_EKS/kubernetes-horizontal-color.png" alt="K8s">
+Source: <a href="https://kubernetes.io/">kubernetes.io</a></p>
+<p>Kubernetes is an open-source platform for automating the deployment, scaling, and management of containerized applications. It provides a unified API for deploying and managing containers, and it can run on a variety of cloud platforms and on-premise servers. With Kubernetes, you can automate the deployment and scaling of your applications, and ensure that your services are always available and up-to-date.</p>
+<p><img src="/images/post/ML_K8S_EKS/K8S_intro.png" alt="K8S_intro"></p>
+<p>Here are the key components and features of Kubernetes:</p>
+<ol>
+<li>
+<p>Nodes: Nodes are the worker machines in a Kubernetes cluster, where the applications and services are deployed. Nodes can be physical machines or virtual machines running in a cloud environment.</p>
+</li>
+<li>
+<p>Pods: Pods are the smallest and simplest unit in the Kubernetes object model. They contain one or more containers, and all containers in a pod share the same network namespace, making it possible for them to communicate with each other using localhost. The pod runs on a node.</p>
+</li>
+<li>
+<p>Services: The entry point of an application and route requests to pods. Services are abstractions that define a set of pods and provide a stable IP address and DNS name to access them. Services also provide load balancing and support for rolling updates, making it easy to deploy new versions of an application.</p>
+</li>
+<li>
+<p>Deployments: A Deployment is a higher-level object in Kubernetes that manages a set of replicas of a pod. The Deployment provides a declarative way to manage the desired state of a set of pods, and ensures that the desired number of replicas are always running and available.</p>
+</li>
+<li>
+<p>Horizontal Pod Autoscaling (HPA) is a Kubernetes feature that allows you to automatically scale the number of replicas of a pod based on CPU utilization, memory utilization, or custom metrics. This helps to ensure that your application can handle varying levels of traffic and demand without manual intervention.</p>
+</li>
+<li>
+<p>In Kubernetes, an Ingress is an API object which is a powerful and flexible way to manage external HTTP(S) traffic to your internal services in the cluster, allowing you to easily expose and route traffic to your services while maintaining control over security and routing policies.
+(External = Load Balancer, Internal = Cluster IP)</p>
+</li>
+</ol>
+<p>Before we start, we need to install <em>Kubectl</em> and <em>Kind</em>.</p>
+<ol>
+<li>
+<p>kubectl: kubectl is the command-line tool for interacting with a Kubernetes cluster. With kubectl, you can perform a variety of tasks, such as creating and managing resources, accessing logs and status information, and debugging applications. kubectl is a versatile and powerful tool that is an essential part of working with Kubernetes.</p>
+</li>
+<li>
+<p>kind: kind is a tool for running Kubernetes clusters on local development machines. kind makes it easy to spin up a fully-functional Kubernetes cluster on your own machine, which is useful for testing and development purposes. With kind, you can experiment with different configurations, test new features, and debug issues without having to rely on a remote cluster.&rsquo;</p>
+</li>
+</ol>
+<h3 id="deploying-tensorflow-models-to-kubernetes">Deploying TensorFlow Models to Kubernetes</h3>
+<p>-Model-</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash"><span style="color:#888;font-style:italic"># load a Docker image into a Kind cluster.</span>
+$ kind load docker-image zoomcamp-10-model:xception-v4-001
+<span style="color:#888;font-style:italic"># list the pods in a Kubernetes cluster.</span>
+$ kubectl get pod
+$ kubectl apply -f kube-config/model-deployment.yaml
+$ kubectl port-forward tf-serving-clothing-model-548c6-fd5n8 8500:8500
+
+<span style="color:#888;font-style:italic"># apply a configuration file to a Kubernetes cluster</span>
+$ kubectl apply -f kube-config/model-service.yaml
+<span style="color:#888;font-style:italic"># forward traffic from a local machine to a service in a Kubernetes cluster</span>
+$ kubectl port-forward service/tf-serving-clothing-model 8500:8500
+</code></pre></div><p>-Gateway-</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash">$ kind load docker-image zoomcamp-10-gateway:001
+$ kubectl apply -f kube-config/gateway-deployment.yaml
+$ kubectl port-forward gateway-7d467-r8dkc 9696:9696
+<span style="color:#888;font-style:italic"># need to add &#39;type: LoadBalancer&#39; in gateway-service.yaml</span>
+$ kubectl apply -f kube-config/gateway-service.yaml
+$ kubectl port-forward service/gateway 8080:80
+</code></pre></div><h3 id="deploying-to-eks">Deploying to EKS</h3>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-YAML" data-lang="YAML"><span style="color:#888;font-style:italic"># eks-config.yaml</span><span style="color:#a89028">
+</span><span style="color:#a89028"></span><span style="color:#2838b0">apiVersion</span><span style="color:#888">:</span><span style="color:#a89028"> </span>eksctl.io/v1alpha5<span style="color:#a89028">
+</span><span style="color:#a89028"></span><span style="color:#2838b0">kind</span><span style="color:#888">:</span><span style="color:#a89028"> </span>ClusterConfig<span style="color:#a89028">
+</span><span style="color:#a89028">
+</span><span style="color:#a89028"></span><span style="color:#2838b0">metadata</span><span style="color:#888">:</span><span style="color:#a89028">
+</span><span style="color:#a89028">  </span><span style="color:#2838b0">name</span><span style="color:#888">:</span><span style="color:#a89028"> </span>mlzoomcamp-eks<span style="color:#a89028">
+</span><span style="color:#a89028">  </span><span style="color:#2838b0">region</span><span style="color:#888">:</span><span style="color:#a89028"> </span>eu-west<span style="color:#444">-1</span><span style="color:#a89028">
+</span><span style="color:#a89028">
+</span><span style="color:#a89028"></span><span style="color:#2838b0">nodeGroups</span><span style="color:#888">:</span><span style="color:#a89028">
+</span><span style="color:#a89028">  </span>- <span style="color:#2838b0">name</span><span style="color:#888">:</span><span style="color:#a89028"> </span>ng-m5-xlarge<span style="color:#a89028">
+</span><span style="color:#a89028">    </span><span style="color:#2838b0">instanceType</span><span style="color:#888">:</span><span style="color:#a89028"> </span>m5.xlarge<span style="color:#a89028">
+</span><span style="color:#a89028">    </span><span style="color:#2838b0">desiredCapacity</span><span style="color:#888">:</span><span style="color:#a89028"> </span><span style="color:#444">1</span><span style="color:#a89028">
+</span></code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash"><span style="color:#888;font-style:italic"># create an Amazon EKS cluster</span> 
+$ eksctl create cluster -f eks-config.yaml
+<span style="color:#888;font-style:italic"># create an Elastic Container Registry (ECR) repository for doecker images</span>
+$ aws ecr create-repository --repository-name mlzoomcamp-images 用
+</code></pre></div><p>After running this line of code, you will see the &ldquo;repositoryUri&rdquo;.
+<img src="/images/post/ML_K8S_EKS/eks.png" alt="eks"></p>
+<p>Send a request through the following code.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># testing.py</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">requests</span>
+url<span style="color:#666">=</span><span style="color:#b83838">&#39;4290xxxxx.ap-northeast-1.elb.amazonaws.com/predict/&#39;</span>
+data <span style="color:#666">=</span> <span style="color:#888">{</span><span style="color:#b83838">&#39;url&#39;</span><span style="color:#888">,</span><span style="color:#b83838">&#39;http://bit.ly/mlbookcamp-pants&#39;</span><span style="color:#888">}</span>
+result<span style="color:#666">=</span>requests<span style="color:#666">.</span>post<span style="color:#888">(</span>url<span style="color:#888">,</span>json<span style="color:#666">=</span>data<span style="color:#888">)</span><span style="color:#666">.</span>json<span style="color:#888">()</span>
+<span style="color:#2838b0">print</span><span style="color:#888">(</span>result<span style="color:#888">)</span>
+</code></pre></div><p>We can see the newly added cluster in EKS; besides, you can also find the added NODE in EC2, as well as the Load Balancer.</p>
+<p><img src="/images/post/ML_K8S_EKS/EKS_cluster.png" alt="EKS_cluster"></p>
+<p><img src="/images/post/ML_K8S_EKS/EKS_instance.png" alt="EKS_instance"></p>
+<p><img src="/images/post/ML_K8S_EKS/Load_balancer.png" alt="Load_balancer"></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://github.com/bruceewue/mlbookcamp-code/tree/master/course-zoomcamp/10-kubernetes">mlbookcamps-kubernetes</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

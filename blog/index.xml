@@ -6,10 +6,19 @@
     <description>Recent content in Blogs on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 30 Nov 2022 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Tue, 14 Feb 2023 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Model Deployment (K8s and EKS)</title>
+      <link>https://bruceewue.github.io/blog/ml_k8s_eks/</link>
+      <pubDate>Tue, 14 Feb 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/ml_k8s_eks/</guid>
+      <description>In this article, I&amp;rsquo;ll explore how to deploy an existing Keras model to AWS-EKS using TensorFlow Serving and Kubernetes.</description>
+    </item>
     
     <item>
       <title>Data pipeline (cryptocurrency)</title>
