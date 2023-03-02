@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>dbt on Bruce Wu&#39;s Blog</title>
+    <link>https://bruceewue.github.io/tags/dbt/</link>
+    <description>Recent content in dbt on Bruce Wu&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-tw</language>
+    <lastBuildDate>Thu, 02 Mar 2023 10:07:47 +0600</lastBuildDate>
+    
+	<atom:link href="https://bruceewue.github.io/tags/dbt/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Analytics Engineering (dbt &#43; BigQuery &#43; Data Studio)</title>
+      <link>https://bruceewue.github.io/blog/de_dbt/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/de_dbt/</guid>
+      <description>When it comes to working with data, many challenges arise. One of the biggest challenges is building a reliable and scalable data pipeline that can handle large volumes of data while ensuring the data&amp;rsquo;s accuracy and consistency.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Utilise data build tool(dbt) cloud with Google Bigquery and Data Studio">
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/data-engineering"
+          class="text-primary">Data engineering</a>
+        
+        <h2>Analytics Engineering (dbt + BigQuery + Data Studio)</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>02 March 2023</span>
+          
+        </div>
+        
+        <img src="https://bruceewue.github.io/images/post/de_dbt/DALLE_data_pipeline.png" class="img-fluid w-100 mb-4" alt="Analytics Engineering (dbt &#43; BigQuery &#43; Data Studio)">
+        
+        <div class="content mb-5">
+          <p>When it comes to working with data, many challenges arise. One of the biggest challenges is building a reliable and scalable data pipeline that can handle large volumes of data while ensuring the data&rsquo;s accuracy and consistency. With dbt, you can transform, test, and document your data in a reproducible and scalable way. In this article, I&rsquo;ll introduce dbt and show you how to utilise it with BigQuery.</p>
+<h2 id="project-diagram">Project Diagram</h2>
+<p><img src="/images/post/de_dbt/dbt_bq.png" alt="diagram">
+Source: <a href="https://docs.google.com/presentation/d/1xSll_jv0T8JF4rYZvLHfkJXYqUjPtThA/edit#slide=id.g1112932a308_0_153">DE_zoomcamp</a></p>
+<h2 id="challenges">Challenges</h2>
+<p>In the past, data engineering and analytics were distinct fields with unique tools, languages, and skill sets. Data pipelines that are operated on platforms like Apache Spark or Amazon Redshift are orchestrated by data engineers using tools like Apache Airflow or AWS Glue. To query and alter data that is stored in databases or data warehouses, data analysts utilise technologies like Python or SQL.</p>
+<p>However, this separation has some drawbacks:</p>
+<ul>
+<li>It separates data teams into silos, which makes it difficult for them to collaborate and align.</li>
+<li>Managing numerous tools and platforms adds complexity and overhead.</li>
+<li>It reduces agility and speed in delivering data products and insights.</li>
+</ul>
+<p>To address these challenges, a new paradigm has emerged: <strong>Analytics Engineering</strong>.</p>
+<p>Analytics engineering applies software engineering principles and techniques to data transformation and analysis. Analytics engineering aims to bridge the gap between data engineering and analytics by enabling data teams to work directly within the data warehouse using a single tool: <strong>dbt</strong>.</p>
+<h2 id="what-is-dbt-data-build-tool">What is dbt (data build tool)?</h2>
+<p><img src="/images/post/de_dbt/dbt.png" alt="dbt">
+Source: <a href="https://www.getdbt.com/">dbt</a></p>
+<p>dbt is an open-source command-line tool that enables data analysts and engineers to transform raw data into valuable insights. It assists users in managing their entire data pipeline, from extracting data from sources to transforming and loading it into a target data warehouse. With dbt, users can build, test, and deploy data pipelines as code, making it easier to maintain and scale their data infrastructure.</p>
+<p>dbt is designed to work with SQL-based data warehouses, such as BigQuery, Redshift, Snowflake, and others. It uses a declarative syntax to define data transformations, making it easy for non-technical stakeholders to understand what the data is doing. dbt also has a testing framework that enables users to ensure data quality and consistency throughout the pipeline.</p>
+<p><img src="/images/post/de_dbt/analytics-engineering-dbt.png" alt="analytics-engineering-dbt">
+Source: <a href="https://www.getdbt.com/">dbt</a></p>
+<h2 id="what-are-the-features-of-dbt">What are the features of dbt?</h2>
+<p><strong>Modularity</strong>: dbt allows you to break down your data pipeline into smaller, reusable components, which can make it easier to maintain and scale over time.</p>
+<p><strong>Versioning</strong>: dbt uses Git to manage versions of your code, which makes it easy to track changes and collaborate with others.</p>
+<p><strong>Testing</strong>: dbt provides a testing framework that allows you to test your data pipeline at different stages of the pipeline, ensuring the accuracy and consistency of your data.</p>
+<p><strong>Documentation</strong>: Documentation is generated automatically from our models,
+sources,and tests using Markdown syntax. Documentation provides metadata such as descriptions, tags, columns types, etc.,as well as lineage diagrams that show how datasets depend on each other.</p>
+<p><strong>Seeds</strong>: Seeds are CSV files that contain static or reference data such as lookup tables or configuration parameters. Seeds allow us to load small amounts of data into the warehouse without using external sources.</p>
+<p><strong>Packages</strong>: Packages are collections of models,sources,tests,macros etc.,that can be shared across projects or with the community via GitHub or other platforms. Packages allow us to leverage existing code or best practices from other users or organizations.</p>
+<h2 id="using-dbt-cloud">Using dbt Cloud</h2>
+<p>dbt Cloud is a web-based application that helps data teams configure, deploy, and control dbt project. dbt Cloud leverages the power of dbt Core and adds features such as:</p>
+<p><strong>Integrated development environment (IDE)</strong>: A web-based interface that allows you to write, test, and run dbt models with syntax highlighting, autocomplete, error checking, and version control integration.</p>
+<p><strong>Scheduling</strong>: A feature that lets you schedule dbt jobs to run automatically at specified intervals or triggers. You can also monitor the status of your jobs and get alerts for failures or anomalies.</p>
+<p><strong>Documentation</strong>: A feature that generates interactive documentation for your dbt project based on your code comments and metadata. You can explore your data models, view lineage graphs, query results, tests, sources.</p>
+<p><strong>Monitoring &amp; alerting</strong>: A feature that helps you track the performance and quality of your data models with metrics such as run duration, freshness, row count, test results etc.</p>
+<h2 id="get-started-with-dbt-cloud">Get started with dbt cloud</h2>
+<p>First, we must create a dbt cloud account and set up the project by connecting to my data warehouse(BigQuery) and Github. Then, click &ldquo;initialize your project&rdquo; on dbt Cloud Here, we&rsquo;ll be able to configure your project settings(dbt_project.yml).</p>
+<p><img src="/images/post/de_dbt/dbt_cloud.png" alt="dbt_cloud"></p>
+<p>Once you&rsquo;ve set up your project settings, you can build and deploy your data pipeline using dbt Cloud. We&rsquo;ll need to create a series of data models in your dbt project to do this.</p>
+<p>To create a new data model, simply create a new SQL file in your dbt project directory and define your data model using SQL. You can also define your data model using YAML files, which define the dependencies between your models.</p>
+<p>Once you&rsquo;ve defined your data models, you can use command <em>dbt run</em> to compile your data models into SQL queries and applies any transformations to your data. It checks for any changes in your source data and creates the final output. Essentially, it runs your data pipeline end-to-end.</p>
+<p><img src="/images/post/de_dbt/dbt_run.png" alt="dbt_run"></p>
+<p>dbt lineage graph is a visual representation of the dependencies and relationships between data sources, models, and outputs in a dbt project1. It is based on the concept of a directed acyclic graph (DAG), which is a way of modeling data transformations as a series of nodes and edges1. A dbt lineage graph can help you understand how your data flows from raw sources to final reports, identify potential issues or inefficiencies in your project structure, and document your data pipeline for other stakeholders.</p>
+<p><img src="/images/post/de_dbt/dbt_lineage%20graph.png" alt="dbt_lineage graph"></p>
+<h2 id="deployment">Deployment</h2>
+<p>To deploy your dbt project using dbt cloud, we need to follow these steps</p>
+<ol>
+<li>Create a deployment environment by selecting “Deploy” and then “Environments”. Name your environment, add a target dataset, and select an account type.</li>
+<li>Schedule a job by selecting “Deploy” and then “Jobs”. Name your job, select an environment, choose a run frequency, and add any custom commands or notifications.</li>
+<li>Deploy your project by clicking on the “Deploy” button in the dbt cloud UI. You can also trigger a manual run by clicking on the “Run” button.</li>
+</ol>
+<p><img src="/images/post/de_dbt/dbt_deployment.png" alt="dbt_deployment"></p>
+<p>Here we can see the document:</p>
+<p><img src="/images/post/de_dbt/dbt_document.png" alt="dbt_document"></p>
+<h2 id="data-studio">Data studio</h2>
+<p>Finally, we can use Google Data Studio to connect BigQuery and present the transformed data through the dashboard.</p>
+<p><img src="/images/post/de_dbt/data_studio.png" alt="data_studio"></p>
+<p><img src="/images/post/de_dbt/dashboard.png" alt="dashboard"></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>dbt is a powerful tool that helps data teams manage complex data pipelines more efficiently. By offering a user-friendly online interface, automated deployment tools, and enterprise-level security features, dbt Cloud expands the capability of dbt. With dbt and dbt Cloud, data teams can collaborate more effectively, deploy changes faster, and ensure data quality with confidence. If you are looking for a fast and reliable way to transform your data warehouse using SQL, then you should give dbt Cloud a try. It will help you streamline your workflow, improve collaboration,and deliver trusted insights faster.</p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/week_4_analytics_engineering">DE-zoomcamp_week4_analytics_engineering</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-177104030-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

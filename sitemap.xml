@@ -3,22 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://bruceewue.github.io/tags/aws/</loc>
-    <lastmod>2023-02-14T10:07:47+06:00</lastmod>
+    <loc>https://bruceewue.github.io/blog/de_dbt/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/bigquery/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/blog/</loc>
-    <lastmod>2023-02-14T10:07:47+06:00</lastmod>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/</loc>
-    <lastmod>2023-02-14T10:07:47+06:00</lastmod>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/categories/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/data-engineering/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/data-studio/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/dbt/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/gcp/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/</loc>
+    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/aws/</loc>
     <lastmod>2023-02-14T10:07:47+06:00</lastmod>
   </url>
   
@@ -38,17 +73,7 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/tags/</loc>
-    <lastmod>2023-02-14T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://bruceewue.github.io/tags/airflow/</loc>
-    <lastmod>2022-11-30T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/categories/data-engineering/</loc>
     <lastmod>2022-11-30T10:07:47+06:00</lastmod>
   </url>
   
@@ -119,16 +144,6 @@
   
   <url>
     <loc>https://bruceewue.github.io/blog/covid_dashboard/</loc>
-    <lastmod>2021-03-10T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/data-studio/</loc>
-    <lastmod>2021-03-10T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/gcp/</loc>
     <lastmod>2021-03-10T10:07:47+06:00</lastmod>
   </url>
   

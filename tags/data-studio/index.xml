@@ -6,10 +6,19 @@
     <description>Recent content in Data studio on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Wed, 10 Mar 2021 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Thu, 02 Mar 2023 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/data-studio/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Analytics Engineering (dbt &#43; BigQuery &#43; Data Studio)</title>
+      <link>https://bruceewue.github.io/blog/de_dbt/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/de_dbt/</guid>
+      <description>When it comes to working with data, many challenges arise. One of the biggest challenges is building a reliable and scalable data pipeline that can handle large volumes of data while ensuring the data&amp;rsquo;s accuracy and consistency.</description>
+    </item>
     
     <item>
       <title>Create COVID-19 Dashboard by Data studio</title>

@@ -6,10 +6,46 @@
     <description>Recent content in Tags on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Tue, 14 Feb 2023 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Thu, 02 Mar 2023 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>BigQuery</title>
+      <link>https://bruceewue.github.io/tags/bigquery/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/bigquery/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data studio</title>
+      <link>https://bruceewue.github.io/tags/data-studio/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/data-studio/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dbt</title>
+      <link>https://bruceewue.github.io/tags/dbt/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/dbt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GCP</title>
+      <link>https://bruceewue.github.io/tags/gcp/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/gcp/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>AWS</title>
@@ -116,24 +152,6 @@
       <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/tags/prometheus/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Data studio</title>
-      <link>https://bruceewue.github.io/tags/data-studio/</link>
-      <pubDate>Wed, 10 Mar 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/data-studio/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>GCP</title>
-      <link>https://bruceewue.github.io/tags/gcp/</link>
-      <pubDate>Wed, 10 Mar 2021 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/gcp/</guid>
       <description></description>
     </item>
     
