@@ -169,8 +169,6 @@ ab -c 10 -n 1000 'http://127.0.0.1:8888/'
 <p><strong>Failed requests:</strong> the number of failed requests. This may be related to the stability of the server.</p>
 <h3 id="dashboard">Dashboard</h3>
 <p>In order to have a clear understanding of job vacancies, a dashboard is produced using <a href="https://redash.io/">Redash</a>, an open-source BI system. The advantage is that it is convenient to retrieve data from the DB through SQL query, and then visualize the results (currently supporting Chart, tunnel, map, pivot table, word cloud, etc.). The results are as follows.</p>
-<p>The following is an analysis of the number of jobs posted daily for each job type, the average salary of each job type, and the word cloud of the JD in the job postings.</p>
-<p><img src="/images/post/dashboard.jpg" alt="dashboard"></p>
 <h3 id="deployment">Deployment</h3>
 <p>Since this application requires launching many services (API, scraper, rabbitmq, mysql, redash, etc.), a tool is needed to manage them uniformly. In this case, Docker Swarm is used to manage multiple services as a single virtual system, simplifying the process of deploying and managing complex applications. Docker Swarm allows you to easily scale your applications up or down by adding or removing Docker engines from the cluster, and it provides built-in load balancing and enhanced security features. (We can also use Kubernetes (K8s) to manage multiple services as a single system.)</p>
 <p>Through the concept of <em>Manager</em> and <em>Worker</em>, multiple machines can be managed, and the <em>Manager</em> can be used to manage all services centrally, including updating services, deploying services, viewing logs, etc., making it very convenient; it is also paired with the <em>portainer</em> UI for management and monitoring.</p>
@@ -206,38 +204,12 @@ Source:<a href="https://grafana.com/grafana/dashboards/11074">Node Exporter for 
 </ul>
 <p><a href="https://bit.ly/3gGBTUX">https://bit.ly/3gGBTUX</a></p>
 <ul>
-<li><strong>Dashboard</strong></li>
+<li><strong>Dashboard</strong>
+The following is an analysis of the number of jobs posted daily for each job type, the average salary of each job type, and the word cloud of the JD in the job postings.</li>
 </ul>
-<p><a href="https://bit.ly/3oQywix">https://bit.ly/3oQywix</a>
-<style>
-
-.iframe-container {   
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56%;  
-  }   
-    
-
-  .iframe-container iframe {   
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-  }
-</style>
-
-
-<div class="iframe-container">
-
-    <iframe
-        src="https://jobboard.ddns.net/public/dashboards/IhGXrNhc9z2KGkGNBJvNRvoweYdGAEagtRUGBm58?org_slug=default&amp;refresh=43200" frameborder="0" style="border:0" allowfullscreen="true">
-    </iframe>
-
-</div>
-
-</p>
+<p><img src="/images/post/dashboard.jpg" alt="dashboard"></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Note: The data up to May 2022 is used as an example case.</p>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
