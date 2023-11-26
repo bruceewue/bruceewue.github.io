@@ -6,10 +6,19 @@
     <description>Recent content in AWS on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Tue, 14 Feb 2023 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Sun, 26 Nov 2023 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Project - Building a small project with AWS</title>
+      <link>https://bruceewue.github.io/blog/aws_project/</link>
+      <pubDate>Sun, 26 Nov 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/aws_project/</guid>
+      <description>In today&amp;rsquo;s fast-paced digital landscape, integrating various cloud services into small projects has become crucial for streamlined and efficient project management.</description>
+    </item>
     
     <item>
       <title>Model Deployment (K8s and EKS)</title>

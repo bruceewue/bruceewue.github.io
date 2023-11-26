@@ -6,10 +6,28 @@
     <description>Recent content in Tags on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Thu, 02 Mar 2023 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Sun, 26 Nov 2023 10:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>AWS</title>
+      <link>https://bruceewue.github.io/tags/aws/</link>
+      <pubDate>Sun, 26 Nov 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Project</title>
+      <link>https://bruceewue.github.io/tags/project/</link>
+      <pubDate>Sun, 26 Nov 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/project/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>BigQuery</title>
@@ -39,20 +57,20 @@
     </item>
     
     <item>
+      <title>dezoomcamp</title>
+      <link>https://bruceewue.github.io/tags/dezoomcamp/</link>
+      <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/tags/dezoomcamp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>GCP</title>
       <link>https://bruceewue.github.io/tags/gcp/</link>
       <pubDate>Thu, 02 Mar 2023 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/tags/gcp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://bruceewue.github.io/tags/aws/</link>
-      <pubDate>Tue, 14 Feb 2023 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/aws/</guid>
       <description></description>
     </item>
     
@@ -107,15 +125,6 @@
       <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/tags/dashboard/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Project</title>
-      <link>https://bruceewue.github.io/tags/project/</link>
-      <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
-      
-      <guid>https://bruceewue.github.io/tags/project/</guid>
       <description></description>
     </item>
     
