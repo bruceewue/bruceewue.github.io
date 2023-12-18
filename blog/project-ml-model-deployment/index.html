@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description"
+    content="Deploying ML systems in production environments">
+  
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2F00WBD4QD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-2F00WBD4QD');
+  </script>
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/projects"
+          class="text-primary">Projects</a>
+        
+        <h2>Project - ML Model Deployment</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>03 December 2021</span>
+          
+        </div>
+        
+        <div class="content mb-5">
+          <h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a>
+<ul>
+<li><a href="#data-source">Data Source</a></li>
+<li><a href="#model-deployment">Model Deployment</a></li>
+<li><a href="#end-to-end-ml-system">End-to-End ML System</a></li>
+<li><a href="#productionising-the-model">Productionising the Model</a></li>
+<li><a href="#deployment-via-api">Deployment via API</a>
+<ul>
+<li><a href="#why-docker-for-ml">Why Docker for ML?</a></li>
+</ul>
+</li>
+<li><a href="#deploy-to-cloud">Deploy to Cloud</a>
+<ul>
+<li><a href="#cloud-deployment-options">Cloud Deployment Options</a></li>
+</ul>
+</li>
+<li><a href="#monitoring">Monitoring</a>
+<ul>
+<li><a href="#aspects-of-monitoring">Aspects of Monitoring</a></li>
+</ul>
+</li>
+<li><a href="#continuous-integrationcontinuous-deployment-cicd">Continuous Integration/Continuous Deployment (CI/CD)</a></li>
+<li><a href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+<p>Embarking on the journey of machine learning and data analysis, the question arises: what comes next? How can we transform our built models or analytical outcomes into practical applications? This blog post explores the creation of a machine learning system, drawing upon data from the manufacturing sector in the Tianchi Big Data Competition. It encompasses model construction, API service deployment, system monitoring, and employs a CI/CD tool for process automation.</p>
+<h3 id="data-source">Data Source</h3>
+<p>This project deals with chemical continuous process data, aiming to predict Yield – a regression challenge. Data is sourced from AWS S3.</p>
+<p><a href="https://tianchi.aliyun.com/competition/entrance/231695/information">Digital Manufacturing Algorithm Competition of JinNan Tianjin</a></p>
+<h3 id="model-deployment">Model Deployment</h3>
+<p>The actual machine learning code often forms a minor part of the overall system, with the bulk involving data handling, feature engineering, deployment, and monitoring.</p>
+<p><img src="/images/post/ML_deployment/ML_architecture.jpg" alt="image info">
+Source: <a href="https://papers.nips.cc/paper/2015/file/86df7dcfd896fcaf2674f757a2463eba-Paper.pdf">Hidden Technical Debt in Machine Learning Systems(2015)</a></p>
+<p>The machine learning modelling process includes data validation, feature engineering, model training, and deployment. A unique aspect of ML systems is their extensive reliance on Data + Models compared to traditional IT systems, posing challenges in regulating system behaviour. A critical factor is &ldquo;<em>Reproducibility</em>,&rdquo; ensuring consistent outputs from identical inputs. This necessity underscores the importance of system testing to minimise unexpected behaviour (Uncertainty).</p>
+<p>To achieve &ldquo;<em>Reproducibility</em>,&rdquo; consider the following:</p>
+<ol>
+<li>Employ version control for tracking code and data modifications.</li>
+<li>Use fixed seeds for processes involving randomness.</li>
+<li>Utilise containerisation, such as Docker, for consistent application performance across different environments.</li>
+</ol>
+<h3 id="end-to-end-ml-system">End-to-End ML System</h3>
+<p>The below diagram illustrates the iterative process of constructing an end-to-end ML system.</p>
+<p><img src="/images/post/ML_deployment/cd4ml-end-to-end.png" alt="end-to-end">
+Source: <a href="https://martinfowler.com/articles/cd4ml.html">Continuous Delivery for Machine Learning</a></p>
+<p>This project adopts the following architecture:</p>
+<p><img src="/images/post/ML_deployment/ML-system.png" alt="MLsystem"></p>
+<h3 id="productionising-the-model">Productionising the Model</h3>
+<p>Deployment involves packaging the entire pipeline, from data processing to model deployment, into a cohesive unit. We utilise <em>sklearn.pipeline</em> for bundling steps like feature engineering and model training. The trained model and associated configurations are then packaged and pushed to a private Package Repository on <a href="https://gemfury.com/">gemfury</a>.</p>
+<h3 id="deployment-via-api">Deployment via API</h3>
+<p>For deployment, we utilise the <em>FastAPI</em> framework, supporting Python 3.6+, known for its automatic generation of OpenAPI specs and schema validation using <em>Pydantic</em>.</p>
+<p><img src="/images/post/ML_deployment/fastapi.jpg" alt="Fastapi">
+Source: <a href="https://github.com/tiangolo/fastapi">tiangolo/fastapi</a></p>
+<p>Containerisation through Docker facilitates the simultaneous launch of multiple services (MLAPI, Prometheus, Grafana, cAdvisor) using docker-compose.</p>
+<h5 id="why-docker-for-ml">Why Docker for ML?</h5>
+<ul>
+<li><strong>Reproducibility</strong>: Ensures consistent model performance.</li>
+<li><strong>Scalability</strong>: Broad support across major cloud platforms.</li>
+<li><strong>Isolation</strong>: Guarantees independent operation and resource management.</li>
+<li><strong>Maintainability</strong>: Simplifies environment setup and enhances team collaboration.</li>
+</ul>
+<p><img src="/images/post/ML_deployment/docker-flow.png" alt="docker-flow">
+Source: <a href="https://denibertovic.com/talks/supercharge-development-env-using-docker/#/11">SUPERCHARGE YOUR DEVELOPMENT ENVIRONMENT (USING DOCKER)</a></p>
+<h3 id="deploy-to-cloud">Deploy to Cloud</h3>
+<p>Deploying applications on the cloud is a versatile way to provide services. We have the choice between Platform as a Service (PaaS) and Infrastructure as a Service (IaaS). In this project, we opted for Heroku and AWS. The key difference lies in the degree of control: IaaS offers more flexibility and requires managing more components, whereas PaaS simplifies deployment.</p>
+<h4 id="cloud-deployment-options">Cloud Deployment Options</h4>
+<ul>
+<li>
+<p><strong>Elastic Container Registry (ECR):</strong> A vital AWS service where Docker images are stored, making them accessible to other AWS services.</p>
+<p><img src="/images/post/ML_deployment/ECR.jpg" alt="ECR"></p>
+</li>
+<li>
+<p><strong>Amazon Elastic Container Service (ECS):</strong> Manages Docker containers efficiently. The architecture necessitates setting up a cluster first, followed by defining internal services and tasks.</p>
+<p><img src="/images/post/ML_deployment/ECS-diagram.jpg" alt="ECS-diagram">
+Source: AWS</p>
+<p>For example, in our project, a cluster named &ldquo;custom-service&rdquo; was established.</p>
+<p><img src="/images/post/ML_deployment/ECS.jpg" alt="ECS"></p>
+</li>
+</ul>
+<h3 id="monitoring">Monitoring</h3>
+<p>Effective monitoring is achieved using Prometheus and Grafana. Prometheus architecture involves periodic retrieval and storage of time-series data via HTTP <em>pull</em> method. It supports the PromQL language for data querying and visualisation in Grafana, and also enables setting alerts for anomalies.</p>
+<p><img src="/images/post/ML_deployment/prometheus.png" alt="prometheus">
+Source: <a href="https://prometheus.io/docs/introduction/overview/">Prometheus</a></p>
+<h4 id="aspects-of-monitoring">Aspects of Monitoring</h4>
+<ol>
+<li>
+<p><strong>Docker Monitoring:</strong> Monitors Docker system resources using <a href="https://github.com/google/cadvisor">google/cAdvisor</a>.</p>
+<p><img src="/images/post/ML_deployment/cAdvisor.jpg" alt="cAdvisor">
+Source: 8bitmen.com</p>
+<p>Monitoring includes CPU and memory usage of services, as shown below.</p>
+<p><img src="/images/post/ML_deployment/docker-monitor.jpg" alt="docker-monitor"></p>
+</li>
+<li>
+<p><strong>Model Monitoring:</strong> Focuses on the predicted values of the model, including the frequency and consistency of predictions over time, and uses statistical methods for analysis.</p>
+</li>
+<li>
+<p><strong>Log Monitoring:</strong> Utilises the ELK Stack for monitoring textual data. Kibana is preferred over Grafana for text-based data due to performance considerations in time-series databases.</p>
+<p>Monitoring input data for drift is also a critical part of ensuring model accuracy.</p>
+</li>
+</ol>
+<h3 id="continuous-integrationcontinuous-deployment-cicd">Continuous Integration/Continuous Deployment (CI/CD)</h3>
+<p>The goal is to automate all stages of application development, testing, and deployment. This makes the system consistently ready for release, standardises processes, and enhances transparency and traceability. In this project, CircleCI is the tool of choice.</p>
+<p><img src="/images/post/ML_deployment/circleci.jpg" alt="ciecleci">
+Source:<a href="https://circleci.com/">CircleCI</a></p>
+<p>The process begins with a &ldquo;config.yml&rdquo; file defining the jobs and steps. CircleCI&rsquo;s integration with GitHub facilitates automated triggers for jobs upon new pull requests or commits.</p>
+<p>Below is an example of the deployment process, initiated once the test_app (unit and integration tests for mlapi) passes. The model package is uploaded and released upon merging into the main branch and tagging the commit.</p>
+<p><img src="/images/post/ML_deployment/cicd_flow.jpg" alt="cicd_flow"></p>
+<p>An example of the &ldquo;test_app&rdquo; job showcasing the use of <em>Tox</em>, an automated testing tool integrated with <em>Pytest</em>.</p>
+<p><img src="/images/post/ML_deployment/cicd_testapp.jpg" alt="cicd_testapp"></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://www.udemy.com/course/deployment-of-machine-learning-models/">Deployment of Machine Learning Models</a> - Online Course</li>
+<li><a href="https://www.udemy.com/course/testing-and-monitoring-machine-learning-model-deployments/">Testing and Monitoring Machine Learning Model Deployments</a> - Online Course</li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/projects">Projects</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

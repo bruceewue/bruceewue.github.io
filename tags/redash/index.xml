@@ -13,11 +13,11 @@
     
     <item>
       <title>Project - Job Scraping and Analysis</title>
-      <link>https://bruceewue.github.io/blog/job_scrape/</link>
+      <link>https://bruceewue.github.io/blog/project-job-scraping-and-analysis/</link>
       <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
-      <description>Since I&amp;rsquo;d like to know the situation of local data-related vacancies in London, England, I have built a job vacancy analysis system, including a distributed crawler with automatic scheduling, a job vacancy analysis dashboard, and a data API.</description>
+      <guid>https://bruceewue.github.io/blog/project-job-scraping-and-analysis/</guid>
+      <description>Table of Contents  Table of Contents  Project Diagram Environment Data Source Why Distributed?</description>
     </item>
     
   </channel>

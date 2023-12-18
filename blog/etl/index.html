@@ -6,7 +6,7 @@
   <!-- mobile responsive meta -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description"
-    content="ETL with Airflow,Kafka,MongoDB">
+    content="Efficient ETL processes using Airflow, Kafka, MongoDB for real-time cryptocurrency data handling.">
   
   <meta name="author" content="Bruce Wu">
   <meta name="generator" content="Hugo 0.74.3" />
@@ -109,7 +109,7 @@
         <a href="/categories/data-engineering"
           class="text-primary">Data engineering</a>
         
-        <h2>Data pipeline (cryptocurrency)</h2>
+        <h2>Optimising Data Pipelines for Cryptocurrency Analysis: Airflow, Kafka, MongoDB</h2>
         <div class="mb-3 post-meta">
           <span>By Bruce Wu</span>
           
@@ -119,101 +119,134 @@
         </div>
         
         <div class="content mb-5">
-          <p>This post demonstrates how to scrape live bitcoin price data using these tools: Airflow, MongoDB, and Kafka. The data is then saved to a NoSQL database (MongoDB) and periodically processed (ETL) to change the price unit from USD to GBP.</p>
+          <h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#project-diagram">Project Diagram</a></li>
+<li><a href="#setting-up-the-environment">Setting Up the Environment</a></li>
+<li><a href="#data-acquisition">Data Acquisition</a></li>
+<li><a href="#mongodb-the-database-choice">MongoDB: The Database Choice</a>
+<ul>
+<li><a href="#python-integration-with-mongodb">Python Integration with MongoDB</a></li>
+</ul>
+</li>
+<li><a href="#kafka-streamlining-data-flow">Kafka: Streamlining Data Flow</a></li>
+<li><a href="#airflow-automating-etl-processes">Airflow: Automating ETL Processes</a>
+<ul>
+<li><a href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
 <h1 id="project-diagram">Project Diagram</h1>
 <p><img src="/images/post/etl_crypto/diagram.png" alt="diagram"></p>
-<h1 id="environment">Environment</h1>
-<p>Ubuntu 20.04 (WSL2) + python 3.8</p>
-<h1 id="data-source">Data source</h1>
+<h1 id="setting-up-the-environment">Setting Up the Environment</h1>
+<p>Ubuntu 20.04 (WSL2) alongside Python 3.8 for our setup.</p>
+<h1 id="data-acquisition">Data Acquisition</h1>
 <p><img src="/images/post/etl_crypto/coincap.png" alt="coincap">
-Source: <a href="https://coincap.io/">coincap</a></p>
-<p>Utilize its API(<a href="https://api.coincap.io/v2/assets/bitcoin">coincap_api</a>) to scrape real-time (live) bitcoin data.</p>
-<h1 id="mongodb">MongoDB</h1>
-<p>NoSQL(aka &ldquo;not only SQL&rdquo;), which is different from relational databases, is used here due to the necessity to process high-speed and mass-produced data. NoSQL databases are designed for unstructured data and ideal for big data applications(schema-free).</p>
+Source: <a href="https://coincap.io/">CoinCap</a></p>
+<p>We leverage the CoinCap API (<a href="https://api.coincap.io/v2/assets/bitcoin">coincap_api</a>) to fetch real-time Bitcoin price data.</p>
+<h1 id="mongodb-the-database-choice">MongoDB: The Database Choice</h1>
+<p>MongoDB, a NoSQL database, is preferred for its ability to handle high-velocity and voluminous data efficiently, making it suitable for big data applications. Unlike traditional relational databases, MongoDB supports unstructured data and is schema-free.</p>
 <p><img src="/images/post/etl_crypto/mongodb.png" alt="MongoDB">
-Source:<a href="https://www.mongodb.com/">MongoDB</a></p>
-<p>Mapping relational database to MongoDB
+Source: <a href="https://www.mongodb.com/">MongoDB</a></p>
+<p>A comparison between relational databases and MongoDB:
 <img src="/images/post/etl_crypto/RDBMS_MongoDB_Mapping.jpg" alt="RDBMS_MongoDB">
-Source:<a href="https://beginnersbook.com/2017/09/mapping-relational-databases-to-mongodb/">RDBMS_MongoDB</a></p>
-<p>MongoDB stores data in BSON format(Binary JSON)， &ldquo;_id&rdquo; is an OBJECT not STRING. To prevent errors when extracting data from the database, we can convert it to STRING.</p>
-<p>We can use <a href="https://studio3t.com/">Studio3T</a> (free MongoDB GUI) to connect to our MongoDB database.</p>
+Source: <a href="https://beginnersbook.com/2017/09/mapping-relational-databases-to-mongodb/">RDBMS_MongoDB</a></p>
+<p>In MongoDB, data is stored in BSON (Binary JSON) format, and &ldquo;_id&rdquo; is an object, not a string. For seamless data extraction, conversion to a string is advisable.</p>
+<p>Studio3T (<a href="https://studio3t.com/),">https://studio3t.com/),</a> a free MongoDB GUI, can be used for database connectivity.</p>
 <p><img src="/images/post/etl_crypto/studio3T.png" alt="studio3T"></p>
-<h2 id="use-python-to-connect-to-mongodb">Use python to connect to mongoDB</h2>
+<h2 id="python-integration-with-mongodb">Python Integration with MongoDB</h2>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#2838b0">import</span> <span style="color:#289870">pymongo</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">pandas</span> <span style="color:#2838b0">as</span> <span style="color:#289870">pd</span>
+
 client <span style="color:#666">=</span> pymongo<span style="color:#666">.</span>MongoClient<span style="color:#888">(</span><span style="color:#b83838">&#39;localhost&#39;</span><span style="color:#888">,</span> <span style="color:#444">27017</span><span style="color:#888">)</span>
-<span style="color:#888;font-style:italic">#load data from mongoDB to Pandas</span>
-database <span style="color:#666">=</span> client<span style="color:#888">[</span><span style="color:#b83838">&#34;db_test&#34;</span><span style="color:#888">]</span> <span style="color:#888;font-style:italic">#  Database Name</span>
-collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span> <span style="color:#888;font-style:italic"># Table Name</span>
+database <span style="color:#666">=</span> client<span style="color:#888">[</span><span style="color:#b83838">&#34;db_test&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Database Name</span>
+collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Collection Name</span>
+
+<span style="color:#888;font-style:italic"># Fetch data from MongoDB to Pandas DataFrame</span>
 query <span style="color:#666">=</span> <span style="color:#888">{}</span>
 records <span style="color:#666">=</span> pd<span style="color:#666">.</span>DataFrame<span style="color:#888">(</span><span style="color:#388038">list</span><span style="color:#888">(</span>collection<span style="color:#666">.</span>find<span style="color:#888">(</span>query<span style="color:#888">)))</span>
 
-<span style="color:#888;font-style:italic"># insert data into mongoDB</span>
+<span style="color:#888;font-style:italic"># Insert data into MongoDB</span>
 df <span style="color:#666">=</span> pd<span style="color:#666">.</span>DataFrame<span style="color:#888">({</span><span style="color:#b83838">&#39;price&#39;</span><span style="color:#888">:</span> <span style="color:#888">[</span><span style="color:#b83838">&#39;12.4&#39;</span><span style="color:#888">,</span> <span style="color:#b83838">&#39;1.4&#39;</span><span style="color:#888">,</span> <span style="color:#b83838">&#39;2.6&#39;</span><span style="color:#888">]})</span>
 records <span style="color:#666">=</span> df<span style="color:#666">.</span>to_dict<span style="color:#888">(</span><span style="color:#b83838">&#39;records&#39;</span><span style="color:#888">)</span> 
 collection<span style="color:#666">.</span>insert_many<span style="color:#888">(</span>records<span style="color:#888">)</span>
-</code></pre></div><h1 id="kafka">Kafka</h1>
-<p>Apache Kafka is a popular open-source distributed event streaming platform designed to handle continuous streams of events in real-time. Because of the bottlenecks that might be caused when large amounts of data continue to be stored directly in the DB, we can consider using Kafka here.</p>
-<p><img src="/images/post/etl_crypto/kafka.png" alt="Kafka"></p>
-<p>Source:<a href="https://kafka.apache.org/">Kafka</a></p>
-<p>Three steps to implement for event streaming:</p>
+</code></pre></div><h1 id="kafka-streamlining-data-flow">Kafka: Streamlining Data Flow</h1>
+<p>Apache Kafka, an eminent open-source distributed event streaming platform, is utilised for managing real-time data streams. Its application helps circumvent potential bottlenecks associated with direct data storage in databases.</p>
+<p><img src="/images/post/etl_crypto/kafka.png" alt="Kafka">
+Source: <a href="https://kafka.apache.org/">Kafka</a></p>
+<p>The implementation involves three key steps:</p>
 <ol>
-<li>To publish (write) and subscribe to (read) streams of events, including continuous import/export of your data from other systems.</li>
-<li>To store streams of events durably and reliably for as long as you want.</li>
-<li>To process streams of events as they occur or retrospectively.</li>
+<li>Publishing and subscribing to event streams, including data import/export.</li>
+<li>Storing event streams durably.</li>
+<li>Processing events as they occur or retrospectively.</li>
 </ol>
-<p>First, we need to start both Zookeper and Kafka services.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash">bin/zookeeper-server-start.sh config/zookeeper.properties
-
+<p>Start Zookeeper and Kafka services:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bin/zookeeper-server-start.sh config/zookeeper.properties
 bin/kafka-server-start.sh config/server.properties
-</code></pre></div><p>Open a terminal, create a new topic named &ldquo;kafka-topics&rdquo;</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Bash" data-lang="Bash">bin/kafka-topics.sh --create --topic test-topic --bootstrap-server localhost:9092 --replication-factor <span style="color:#444">1</span> --partitions <span style="color:#444">1</span>
+</code></pre></div><p>Create a new Kafka topic:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bin/kafka-topics.sh --create --topic test-topic --bootstrap-server localhost:9092 --replication-factor <span style="color:#444">1</span> --partitions <span style="color:#444">1</span>
 </code></pre></div><ul>
-<li>Producers: client applications that publish (write) events to Kafka</li>
-<li>consumers: those that subscribe to (read and process) these events</li>
+<li>Producers: Applications that publish events to Kafka.</li>
+<li>Consumers: Applications that subscribe to and process these events.</li>
 </ul>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># producer.py</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">kafka</span> <span style="color:#2838b0">import</span> KafkaProducer
+<span style="color:#2838b0">import</span> <span style="color:#289870">requests</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">json</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">datetime</span> <span style="color:#2838b0">import</span> datetime
+
 brokers<span style="color:#888">,</span> topic <span style="color:#666">=</span> <span style="color:#b83838">&#34;localhost:9092&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;coincap&#34;</span>
 producer <span style="color:#666">=</span> KafkaProducer<span style="color:#888">(</span>bootstrap_servers<span style="color:#666">=</span><span style="color:#888">[</span>brokers<span style="color:#888">])</span>
+
 url <span style="color:#666">=</span> <span style="color:#b83838">&#34;https://api.coincap.io/v2/assets/bitcoin&#34;</span>
 <span style="color:#2838b0">while</span> <span style="font-style:italic">True</span><span style="color:#888">:</span>
-    r <span style="color:#666">=</span> requests<span style="color:#666">.</span>get<span style="color:#888">(</span>url<span style="color:#888">)</span>
-    v <span style="color:#666">=</span> json<span style="color:#666">.</span>dumps<span style="color:#888">(</span>r<span style="color:#666">.</span>json<span style="color:#888">())</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>
-    k <span style="color:#666">=</span> datetime<span style="color:#666">.</span>now<span style="color:#888">()</span><span style="color:#666">.</span>strftime<span style="color:#888">(</span><span style="color:#b83838">&#34;%Y-%m-</span><span style="color:#b83838;text-decoration:underline">%d</span><span style="color:#b83838"> %H:%M:%S:</span><span style="color:#b83838;text-decoration:underline">%f</span><span style="color:#b83838">&#34;</span><span style="color:#888">)</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>  
-    producer<span style="color:#666">.</span>send<span style="color:#888">(</span>topic<span style="color:#888">,</span> key<span style="color:#666">=</span>k<span style="color:#888">,</span> value<span style="color:#666">=</span>v<span style="color:#888">)</span>
+    response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get<span style="color:#888">(</span>url<span style="color:#888">)</span>
+    value <span style="color:#666">=</span> json<span style="color:#666">.</span>dumps<span style="color:#888">(</span>response<span style="color:#666">.</span>json<span style="color:#888">())</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>
+    key <span style="color:#666">=</span> datetime<span style="color:#666">.</span>now<span style="color:#888">()</span><span style="color:#666">.</span>strftime<span style="color:#888">(</span><span style="color:#b83838">&#34;%Y-%m-</span><span style="color:#b83838;text-decoration:underline">%d</span><span style="color:#b83838"> %H:%M:%S:</span><span style="color:#b83838;text-decoration:underline">%f</span><span style="color:#b83838">&#34;</span><span style="color:#888">)</span><span style="color:#666">.</span>encode<span style="color:#888">()</span>  
+    producer<span style="color:#666">.</span>send<span style="color:#888">(</span>topic<span style="color:#888">,</span> key<span style="color:#666">=</span>key<span style="color:#888">,</span> value<span style="color:#666">=</span>value<span style="color:#888">)</span>
     <span style="color:#888;font-style:italic"># time.sleep(5)</span>
-
-</code></pre></div><p>The following section is consumer, which receives the data and stores it in the DB</p>
+</code></pre></div><p>The consumer section receives data and stores it in MongoDB:</p>
 <div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#888;font-style:italic"># consumer.py</span>
+<span style="color:#2838b0">from</span> <span style="color:#289870">kafka</span> <span style="color:#2838b0">import</span> KafkaConsumer
+<span style="color:#2838b0">import</span> <span style="color:#289870">pymongo</span>
+<span style="color:#2838b0">import</span> <span style="color:#289870">json</span>
+
 brokers<span style="color:#888">,</span> topic <span style="color:#666">=</span> <span style="color:#b83838">&#34;localhost:9092&#34;</span><span style="color:#888">,</span> <span style="color:#b83838">&#34;coincap&#34;</span>
 consumer <span style="color:#666">=</span> KafkaConsumer<span style="color:#888">(</span>topic<span style="color:#888">,</span> bootstrap_servers<span style="color:#666">=</span><span style="color:#888">[</span>brokers<span style="color:#888">])</span>
+
 client <span style="color:#666">=</span> pymongo<span style="color:#666">.</span>MongoClient<span style="color:#888">(</span><span style="color:#b83838">&#34;localhost&#34;</span><span style="color:#888">,</span> <span style="color:#444">27017</span><span style="color:#888">)</span>
 database <span style="color:#666">=</span> client<span style="color:#888">[</span><span style="color:#b83838">&#34;db_test&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Database Name</span>
-collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Table Name</span>
+collection <span style="color:#666">=</span> database<span style="color:#888">[</span><span style="color:#b83838">&#34;coincap&#34;</span><span style="color:#888">]</span>  <span style="color:#888;font-style:italic"># Collection Name</span>
 
 <span style="color:#2838b0">for</span> msg <span style="color:#a848a8">in</span> consumer<span style="color:#888">:</span>
     dict_data <span style="color:#666">=</span> json<span style="color:#666">.</span>loads<span style="color:#888">(</span>msg<span style="color:#666">.</span>value<span style="color:#888">)</span>
     dict_data<span style="color:#888">[</span><span style="color:#b83838">&#34;data&#34;</span><span style="color:#888">][</span><span style="color:#b83838">&#34;timestamp&#34;</span><span style="color:#888">]</span> <span style="color:#666">=</span> msg<span style="color:#666">.</span>key<span style="color:#666">.</span>decode<span style="color:#888">()</span>
     collection<span style="color:#666">.</span>insert_many<span style="color:#888">([</span>dict_data<span style="color:#888">[</span><span style="color:#b83838">&#34;data&#34;</span><span style="color:#888">]])</span>
-</code></pre></div><h1 id="airflow">Airflow</h1>
-<p>Apache Airflow is a platform to programmatically author, schedule, and monitor workflows. I&rsquo;d like to automatically convert the price of bitcoin from USD to GBP and then store them in the DB.</p>
-<p>Before using Airflow, we need to set up the connection to the DB(MongoDB) via the Airflow Web UI. (default: pymongo)</p>
-<p><img src="/images/post/etl_crypto/airflow_mongo.png" alt="airflow_mongo"></p>
-<p>We need to add the folder &ldquo;dags&rdquo; under the airflow folder and then add a python file (.py) in the folder to define the three tasks of ETL in the DAG, namely Extract, Transform, and Load. They are expected to be executed sequentially at 00:30 every day. Here&rsquo;s a quick, simple, and free editor for cron schedule <a href="https://crontab.guru/">crontab.guru</a>, which can help us set the schedule_interval.</p>
+</code></pre></div><h1 id="airflow-automating-etl-processes">Airflow: Automating ETL Processes</h1>
+<p>Apache Airflow is a powerful tool for authoring, scheduling, and monitoring workflows. Our use case involves automating the conversion of Bitcoin prices from USD to GBP, followed by database storage.</p>
+<p>Set up the connection to MongoDB via the Airflow Web UI:
+<img src="/images/post/etl_crypto/airflow_mongo.png" alt="airflow_mongo"></p>
+<p>Define ETL tasks in the DAG:</p>
+<ul>
+<li>Extract: Fetch data from the source.</li>
+<li>Transform: Convert USD prices to GBP.</li>
+<li>Load: Store the transformed data in MongoDB.</li>
+</ul>
+<p>These tasks are scheduled to run sequentially at 00:30 daily. Use <a href="https://crontab.guru/">crontab.guru</a> for setting the <code>schedule_interval</code>.</p>
 <ul>
 <li>dags/dag.py
-<img src="../../static/images/post/etl_crypto/dag_python.png" alt="Alt text"></li>
+<img src="/images/post/etl_crypto/dag_python.png" alt="dags"></li>
 </ul>
-<p><img src="/images/post/etl_crypto/dags.png" alt="dags"></p>
-<p>task1 -&gt; task2 -&gt; task3
+<p>Task Sequence: task1 -&gt; task2 -&gt; task3
 <img src="/images/post/etl_crypto/DAG.png" alt="DAG"></p>
-<p>Log
+<p>Log:
 <img src="/images/post/etl_crypto/log.png" alt="airflow_log"></p>
-<p>Result
+<p>Result:
 <img src="/images/post/etl_crypto/studio3T_GBP.png" alt="studio3T_GBP"></p>
 <h3 id="additional-resources">Additional Resources</h3>
 <ul>
-<li><a href="https://kafka.apache.org/intro">Kafka</a></li>
-<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/">Airflow</a></li>
+<li><a href="https://kafka.apache.org/intro">Kafka Documentation</a></li>
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/">Airflow Documentation</a></li>
 </ul>
 
         </div>
@@ -284,6 +317,9 @@ collection <span style="color:#666">=</span> database<span style="color:#888">[<
           </li>
           <li class="mb-3"><a class="text-dark"
               href="/categories/others">Others</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/projects">Projects</a>
           </li>
         </ul>
       </div>

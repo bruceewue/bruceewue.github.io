@@ -13,10 +13,10 @@
     
     <item>
       <title>Project - Building a small project with AWS</title>
-      <link>https://bruceewue.github.io/blog/aws_project/</link>
+      <link>https://bruceewue.github.io/blog/project-building-a-small-project-with-aws/</link>
       <pubDate>Sun, 26 Nov 2023 10:07:47 +0600</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/aws_project/</guid>
+      <guid>https://bruceewue.github.io/blog/project-building-a-small-project-with-aws/</guid>
       <description>In today&amp;rsquo;s fast-paced digital landscape, integrating various cloud services into small projects has become crucial for streamlined and efficient project management.</description>
     </item>
     
@@ -39,12 +39,12 @@
     </item>
     
     <item>
-      <title>Data pipeline (cryptocurrency)</title>
+      <title>Optimising Data Pipelines for Cryptocurrency Analysis: Airflow, Kafka, MongoDB</title>
       <link>https://bruceewue.github.io/blog/etl/</link>
       <pubDate>Wed, 30 Nov 2022 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/blog/etl/</guid>
-      <description>This post demonstrates how to scrape live bitcoin price data using these tools: Airflow, MongoDB, and Kafka.</description>
+      <description>Table of Contents  Project Diagram Setting Up the Environment Data Acquisition MongoDB: The Database Choice  Python Integration with MongoDB   Kafka: Streamlining Data Flow Airflow: Automating ETL Processes  Additional Resources    Project Diagram Setting Up the Environment Ubuntu 20.</description>
     </item>
     
     <item>
@@ -58,20 +58,20 @@
     
     <item>
       <title>Project - Job Scraping and Analysis</title>
-      <link>https://bruceewue.github.io/blog/job_scrape/</link>
+      <link>https://bruceewue.github.io/blog/project-job-scraping-and-analysis/</link>
       <pubDate>Fri, 04 Feb 2022 10:07:47 +0600</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/job_scrape/</guid>
-      <description>Since I&amp;rsquo;d like to know the situation of local data-related vacancies in London, England, I have built a job vacancy analysis system, including a distributed crawler with automatic scheduling, a job vacancy analysis dashboard, and a data API.</description>
+      <guid>https://bruceewue.github.io/blog/project-job-scraping-and-analysis/</guid>
+      <description>Table of Contents  Table of Contents  Project Diagram Environment Data Source Why Distributed?</description>
     </item>
     
     <item>
       <title>Project - ML Model Deployment</title>
-      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
+      <link>https://bruceewue.github.io/blog/project-ml-model-deployment/</link>
       <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>After learning machine learning and data analysis methods, I can&amp;rsquo;t help but think: what&amp;rsquo;s next?</description>
+      <guid>https://bruceewue.github.io/blog/project-ml-model-deployment/</guid>
+      <description>Table of Contents  Table of Contents  Data Source Model Deployment End-to-End ML System Productionising the Model Deployment via API  Why Docker for ML?</description>
     </item>
     
     <item>

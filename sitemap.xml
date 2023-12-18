@@ -23,17 +23,17 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/categories/others/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://bruceewue.github.io/tags/project/</loc>
     <lastmod>2023-11-26T10:07:47+06:00</lastmod>
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/blog/aws_project/</loc>
+    <loc>https://bruceewue.github.io/blog/project-building-a-small-project-with-aws/</loc>
+    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/projects/</loc>
     <lastmod>2023-11-26T10:07:47+06:00</lastmod>
   </url>
   
@@ -98,17 +98,17 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/blog/etl/</loc>
-    <lastmod>2022-11-30T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://bruceewue.github.io/tags/kafka/</loc>
     <lastmod>2022-11-30T10:07:47+06:00</lastmod>
   </url>
   
   <url>
     <loc>https://bruceewue.github.io/tags/mongodb/</loc>
+    <lastmod>2022-11-30T10:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/blog/etl/</loc>
     <lastmod>2022-11-30T10:07:47+06:00</lastmod>
   </url>
   
@@ -128,7 +128,7 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/blog/job_scrape/</loc>
+    <loc>https://bruceewue.github.io/blog/project-job-scraping-and-analysis/</loc>
     <lastmod>2022-02-04T10:07:47+06:00</lastmod>
   </url>
   
@@ -148,7 +148,7 @@
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/blog/ml_deployment/</loc>
+    <loc>https://bruceewue.github.io/blog/project-ml-model-deployment/</loc>
     <lastmod>2021-12-03T10:07:47+06:00</lastmod>
   </url>
   
@@ -169,6 +169,11 @@
   
   <url>
     <loc>https://bruceewue.github.io/blog/markdown_test/</loc>
+    <lastmod>2020-09-02T21:07:47+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/others/</loc>
     <lastmod>2020-09-02T21:07:47+08:00</lastmod>
   </url>
   

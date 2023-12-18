@@ -12,12 +12,12 @@
     
     
     <item>
-      <title>Data pipeline (cryptocurrency)</title>
+      <title>Optimising Data Pipelines for Cryptocurrency Analysis: Airflow, Kafka, MongoDB</title>
       <link>https://bruceewue.github.io/blog/etl/</link>
       <pubDate>Wed, 30 Nov 2022 10:07:47 +0600</pubDate>
       
       <guid>https://bruceewue.github.io/blog/etl/</guid>
-      <description>This post demonstrates how to scrape live bitcoin price data using these tools: Airflow, MongoDB, and Kafka.</description>
+      <description>Table of Contents  Project Diagram Setting Up the Environment Data Acquisition MongoDB: The Database Choice  Python Integration with MongoDB   Kafka: Streamlining Data Flow Airflow: Automating ETL Processes  Additional Resources    Project Diagram Setting Up the Environment Ubuntu 20.</description>
     </item>
     
   </channel>

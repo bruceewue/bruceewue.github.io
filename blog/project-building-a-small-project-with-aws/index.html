@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description"
+    content="Discover how to integrate AWS services like IAM, VPC, RDS, EC2, and S3 in a small project.">
+  
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2F00WBD4QD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-2F00WBD4QD');
+  </script>
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/projects"
+          class="text-primary">Projects</a>
+        
+        <h2>Project - Building a small project with AWS</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>26 November 2023</span>
+          
+        </div>
+        
+        <div class="content mb-5">
+          <p>In today&rsquo;s fast-paced digital landscape, integrating various cloud services into small projects has become crucial for streamlined and efficient project management. This article delves into the world of Amazon Web Services (AWS), providing a comprehensive guide on how to harness its capabilities for your projects. We will explore how to set up and manage key AWS services, including IAM for user and policy configuration, VPC for network setup, RDS for database management, EC2 for server instances, and S3 for storage solutions.</p>
+<h3 id="table-of-contents">Table of Contents</h3>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#1-setting-up-iam-users-policies-and-user-group"><strong>1. Setting Up IAM Users Policies, and User Group:</strong></a></li>
+<li><a href="#2-configuring-vpc-and-subnets"><strong>2. Configuring VPC and Subnets:</strong></a></li>
+<li><a href="#3-security-group-and-rds-configuration"><strong>3. Security Group and RDS Configuration:</strong></a></li>
+<li><a href="#4-ec2-instance-configuration"><strong>4. EC2 Instance Configuration:</strong></a></li>
+<li><a href="#5-s3-storage-configuration-and-usage"><strong>5. S3 Storage Configuration and Usage:</strong></a></li>
+<li><a href="#6-frontend-and-backend-integration"><strong>6. Frontend and backend Integration:</strong></a></li>
+<li><a href="#7-pausing-and-resuming-projects"><strong>7. Pausing and Resuming Projects:</strong></a></li>
+<li><a href="#8-resource-cleanup"><strong>8. Resource Cleanup:</strong></a></li>
+<li><a href="#9-data-backup"><strong>9. Data Backup:</strong></a></li>
+</ul>
+<h3 id="1-setting-up-iam-users-policies-and-user-group"><strong>1. Setting Up IAM Users Policies, and User Group:</strong></h3>
+<p>In the world of AWS, security is paramount. This step involves creating new IAM policies, granting specific access permissions to services like EC2, VPC, RDS, and S3. It&rsquo;s essential to configure roles and permissions related to EC2 and RDS, focusing on capabilities like ListRole, CreateRole, PassRole, and ListInstanceProfiles. To effectively demonstrate a demo, we&rsquo;ll create two IAM users: &lsquo;bruce-demo&rsquo; and &lsquo;kuang-demo&rsquo;. These users will be assigned appropriate policy permissions, serving as practical examples in our demonstration.</p>
+<p>Policies:
+<img src="/images/post/aws_project/policy.png" alt="policies"></p>
+<p>User Group:
+<img src="/images/post/aws_project/user_group.png" alt="user_group"></p>
+<h3 id="2-configuring-vpc-and-subnets"><strong>2. Configuring VPC and Subnets:</strong></h3>
+<p>The creation of a VPC, dubbed &lsquo;aws-demo-vpc&rsquo; with an IP range of 10.0.0.0/16, lays the foundation of your network infrastructure in AWS. Subnet configuration, including the setup of public and private subnets, plays a significant role. Establishing an Internet Gateway (IGW) for the public subnet and configuring the Route Table ensures seamless internet connectivity.</p>
+<p>VPC:
+<img src="/images/post/aws_project/VPC2.png" alt="VPC2"></p>
+<p>Subnets:
+<img src="/images/post/aws_project/subnets.png" alt="subnets"></p>
+<p>IGW:
+<img src="/images/post/aws_project/IGW.png" alt="IGW"></p>
+<h3 id="3-security-group-and-rds-configuration"><strong>3. Security Group and RDS Configuration:</strong></h3>
+<p>Security is not just a feature but a necessity. Setting up a security group named &lsquo;aws-demo-review-rds-sg&rsquo; with appropriate inbound and outbound rules facilitates the connection to a MySQL database. The creation of a Subnet Group and a database instance named &lsquo;aws-demo-rds&rsquo; in RDS, with MySQL as the database engine, enhances the security posture. Adjusting settings like IOPS, storage auto-scaling, and Multi-AZ configurations ensures a robust and resilient database setup.</p>
+<p>Security Group:
+<img src="/images/post/aws_project/subnetgroup.png" alt="subnet_group"></p>
+<p>RDS_SG:
+<img src="/images/post/aws_project/rds_sg.png" alt="rds_sg"></p>
+<p>RDS:
+<img src="/images/post/aws_project/rds_create.png" alt="rds_create"></p>
+<h3 id="4-ec2-instance-configuration"><strong>4. EC2 Instance Configuration:</strong></h3>
+<p>Launching EC2 instances is a crucial aspect of this setup. We initiate two instances, both derived from the Amazon Linux AMI. These are placed within the public subnet and assigned public IP addresses to ensure network accessibility. To tailor their accessibility, we configure security groups, setting up distinct ports for each: port 8080 for the first instance (EC2-1), designated for front-end simulation, and port 3000 for the second instance (EC2-2), intended for back-end simulation.</p>
+<p>The functionality of these instances is further enhanced by installing Docker and docker-compose, which aid in the deployment and management of applications, along with GIT for version control. This arrangement effectively creates a practical environment, where one VM (EC2-1) acts as a front-end server and the other (EC2-2) as a back-end server, demonstrating a typical web application infrastructure.</p>
+<h3 id="5-s3-storage-configuration-and-usage"><strong>5. S3 Storage Configuration and Usage:</strong></h3>
+<p>The configuration of S3 storage is vital for managing resources effectively. In EC2-1, creating an S3 Bucket for storing frontend resources, such as cover images, and implementing version control to prevent data loss demonstrates a well-thought-out storage strategy. Configuring IAM roles for EC2 instances to interact with S3 services further integrates your storage solutions.</p>
+<p>S3:
+<img src="/images/post/aws_project/S3.png" alt="S3"></p>
+<h3 id="6-frontend-and-backend-integration"><strong>6. Frontend and backend Integration:</strong></h3>
+<p>The photograph provided illustrates a successful implementation using AWS services, particularly with EC2 instances and RDS.</p>
+<p>In this setup, EC2-2 (backend) plays a crucial role in connecting to the RDS (Relational Database Service) to retrieve data. This data management is fundamental, as RDS offers scalable and efficient database storage, essential for dynamic web applications.</p>
+<p>Meanwhile, EC2-1 (frontend) is configured to fetch database data through the backend API. This architecture allows the front-end of the application to display data on the webpage dynamically and interactively. The separation of concerns between the frontend and backend ensures a more secure, efficient, and manageable system.</p>
+<p>Additionally, the use of Amazon S3 (Simple Storage Service) is highlighted for image hosting. By storing images in S3 and retrieving their public OBJECT URLs, the application can easily embed these images on the web pages. This approach not only simplifies the management of web resources but also leverages the high availability and durability of AWS S3.</p>
+<p>Furthermore, the interface includes a dialog box where users can insert new data into the database directly from the webpage. This feature enhances user interaction and data input efficiency.</p>
+<p>EC2-1 (frontend):
+<img src="/images/post/aws_project/frontend.png" alt="frontend"></p>
+<p>EC2-2 (backend):
+<img src="/images/post/aws_project/backend.png" alt="backend"></p>
+<h3 id="7-pausing-and-resuming-projects"><strong>7. Pausing and Resuming Projects:</strong></h3>
+<p>The ability to pause and resume resources efficiently is crucial. Stopping RDS and EC2 resources, creating snapshots and AMIs, and restoring databases and instances from these snapshots and AMIs are essential for maintaining service continuity. Updating connection parameters and restarting services ensures minimal downtime and efficient resource management.</p>
+<p>RDS-Snapshot:
+<img src="/images/post/aws_project/eds-snapshot.png" alt="Snapshot"></p>
+<h3 id="8-resource-cleanup"><strong>8. Resource Cleanup:</strong></h3>
+<p>Finally, effective resource management involves cleaning up after project completion. Deleting RDS instances, snapshots, and subnet groups; terminating EC2 instances and deleting related AMIs and snapshots; removing S3 buckets; and cleaning up the VPC and associated resources are critical steps to avoid unnecessary costs and maintain a clutter-free AWS environment.</p>
+<h3 id="9-data-backup"><strong>9. Data Backup:</strong></h3>
+<p>Regularly creating snapshots or AMIs of RDS and EC2 ensures that you are prepared for disaster recovery. This proactive approach to data backup is key to maintaining data integrity and business continuity in the face of unforeseen challenges.</p>
+<p>This guide offers a structured approach to setting up and managing your AWS environment, ensuring that each component is configured for optimal performance and security. By following these steps, you can establish a robust and scalable AWS infrastructure tailored to your specific project needs.</p>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/projects">Projects</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

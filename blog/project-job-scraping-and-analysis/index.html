@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description"
+    content="Innovative Distributed Crawler System for Analysing Job Vacancies in London, UK.">
+  
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2F00WBD4QD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-2F00WBD4QD');
+  </script>
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/projects"
+          class="text-primary">Projects</a>
+        
+        <h2>Project - Job Scraping and Analysis</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>04 February 2022</span>
+          
+        </div>
+        
+        <img src="https://bruceewue.github.io/images/post/job_thumb2.jpg" class="img-fluid w-100 mb-4" alt="Project - Job Scraping and Analysis">
+        
+        <div class="content mb-5">
+          <h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a>
+<ul>
+<li><a href="#project-diagram">Project Diagram</a></li>
+<li><a href="#environment">Environment</a></li>
+<li><a href="#data-source">Data Source</a></li>
+<li><a href="#why-distributed">Why Distributed?</a>
+<ul>
+<li><a href="#celeryrabbitmqflower">Celery/RabbitMQ/Flower</a></li>
+</ul>
+</li>
+<li><a href="#scheduling">Scheduling</a></li>
+<li><a href="#api--load-test">API &amp; Load Test</a></li>
+<li><a href="#dashboard">Dashboard</a></li>
+<li><a href="#deployment">Deployment</a></li>
+<li><a href="#ddns--ssl">DDNS &amp; SSL</a></li>
+<li><a href="#cicd">CI/CD</a></li>
+<li><a href="#monitoring">Monitoring</a></li>
+<li><a href="#result">Result</a></li>
+<li><a href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="project-diagram">Project Diagram</h3>
+<p><img src="/images/post/job_scrape_diagram.png" alt="diagram"></p>
+<h3 id="environment">Environment</h3>
+<p>Development: Ubuntu 20.04 (WSL2) + Python 3.9<br>
+Deployment: VM (2 OCPUs (ARM64), 12GB RAM) x 2 on Oracle Cloud</p>
+<h3 id="data-source">Data Source</h3>
+<p><img src="/images/post/indeed.jpg" alt="Indeed"></p>
+<p>Indeed job search:
+<img src="/images/post/indeed_ml.jpg" alt="Indeed_search"></p>
+<p>Source: <a href="https://uk.indeed.com/">Indeed</a></p>
+<p>I have selected Indeed, the UK&rsquo;s premier job search platform, as the data source. The focus is on full-time, data science-related positions in the London area to minimise server load. Only recent listings are collected, with new posts automatically crawled daily. The system is designed for future expansion to include other platforms and job types.</p>
+<h3 id="why-distributed">Why Distributed?</h3>
+<ol>
+<li>Enhanced crawler efficiency.</li>
+<li>Single-machine limitations and failure risks when scaling up.</li>
+<li>Prevention of IP blocking from excessive crawling, mitigated with programmed <em>sleep</em> intervals.</li>
+</ol>
+<h4 id="celeryrabbitmqflower">Celery/RabbitMQ/Flower</h4>
+<p>Celery excels as a distributed system, offering simplicity, flexibility, and reliability for processing large volumes of messages. It&rsquo;s particularly effective for real-time task processing and scheduling, providing essential tools for operational management.</p>
+<p>In a distributed crawling architecture, three key roles are integral:</p>
+<ol>
+<li><em>Producer</em>: Responsible for dispatching tasks to the Broker.</li>
+<li><em>Message Broker</em> (RabbitMQ in this context): Receives tasks and forwards them to Workers.</li>
+<li><em>Worker</em>: Executes tasks received from the Broker, such as Crawlers.</li>
+</ol>
+<p>The process flow is straightforward: The producer sends tasks to the queue. Workers, connected to the broker and acting as task executors, then retrieve and process these tasks according to predefined settings.</p>
+<p>Below is an overview of RabbitMQ, showcasing two tasks awaiting processing in the queue. The &lsquo;queue&rsquo; page provides further insights into each queue&rsquo;s status and detailed information about the tasks.</p>
+<p><img src="/images/post/rabbitmq.jpg" alt="RabbitMQ_overview"></p>
+<p>Worker monitoring is efficiently handled by <em>Flower</em>. It allows us to check whether the workers are active and assess the status of task execution. In this project, we&rsquo;ve currently enabled two workers, a number that can be adjusted based on project requirements.</p>
+<p><img src="/images/post/flower_worker.jpg" alt="Flower_worker"></p>
+<p>Additionally, Flower provides a comprehensive list of tasks executed by the workers, enhancing the transparency of the workflow.</p>
+<p><img src="/images/post/flower_task.jpg" alt="Flower_task"></p>
+<h3 id="scheduling">Scheduling</h3>
+<p>To crawl new job vacancies daily, the Python package <em>APScheduler</em> schedules the function &lsquo;sent_crawler_task_DE&rsquo; to run every day at 12:00 Taipei time.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">scheduler <span style="color:#666">=</span> BackgroundScheduler<span style="color:#888">(</span>timezone<span style="color:#666">=</span><span style="color:#b83838">&#34;Asia/Taipei&#34;</span><span style="color:#888">)</span>
+scheduler<span style="color:#666">.</span>add_job<span style="color:#888">(</span>
+    <span style="color:#388038">id</span><span style="color:#666">=</span><span style="color:#b83838">&#34;sent_crawler_task_DE&#34;</span><span style="color:#888">,</span>
+    func<span style="color:#666">=</span>sent_crawler_task_DE<span style="color:#888">,</span>
+    trigger<span style="color:#666">=</span><span style="color:#b83838">&#34;cron&#34;</span><span style="color:#888">,</span>
+    hour<span style="color:#666">=</span><span style="color:#b83838">&#34;12&#34;</span><span style="color:#888">,</span>
+    minute<span style="color:#666">=</span><span style="color:#b83838">&#34;0&#34;</span><span style="color:#888">,</span>
+    day_of_week<span style="color:#666">=</span><span style="color:#b83838">&#34;*&#34;</span><span style="color:#888">,</span>
+<span style="color:#888">)</span>
+</code></pre></div><h3 id="api--load-test">API &amp; Load Test</h3>
+<p>FastAPI stands out for creating RESTful APIs, with the added benefit of auto-generating OpenAPI documentation (OAS3). This feature simplifies the testing of APIs directly via a web interface.</p>
+<p>Upon specifying the job position and location parameters, the API adeptly returns the relevant job vacancy data in JSON format, showcasing the power of FastAPI in handling dynamic data queries.</p>
+<p><img src="/images/post/scraper_apidoc.jpg" alt="OAS3-doc"></p>
+<p>To ensure the API&rsquo;s robustness, conducting load testing is a crucial step. ApacheBench (ab), a Python package, is an excellent tool for this purpose. It emulates a scenario where multiple users send concurrent requests to the server, thus testing its capacity to handle heavy traffic.</p>
+<p>The command below demonstrates how to perform load testing on a locally deployed API service, with a concurrency level of 10 and a total of 1000 requests:</p>
+<pre><code>apt-get install apache2-utils -y
+ab -c 10 -n 1000 'http://127.0.0.1:8888/'
+</code></pre><p>The resulting output provides valuable insights:</p>
+<p><img src="/images/post/ab_result.jpg" alt="ab_result"></p>
+<ul>
+<li><strong>Requests per second:</strong> Indicates how many requests the API can process each second.</li>
+<li><strong>Time per request:</strong> Represents the average response time for each request, measured in milliseconds.</li>
+<li><strong>Failed requests:</strong> The count of requests that didn&rsquo;t succeed, offering clues about the server&rsquo;s stability.</li>
+</ul>
+<p>This load testing phase is integral in evaluating the performance and reliability of the API under simulated high-traffic conditions.</p>
+<h3 id="dashboard">Dashboard</h3>
+<p>A comprehensive dashboard is created using <a href="https://redash.io/">Redash</a>, enabling easy data retrieval and visualisation. The advantage is that it is convenient to retrieve data from the DB through SQL query, and then visualize the results (currently supporting Chart, tunnel, map, pivot table, word cloud, etc.). The results are as follows.</p>
+<h3 id="deployment">Deployment</h3>
+<p>Since this application requires launching many services (API, scraper, rabbitmq, mysql, redash, etc.), a tool is needed to manage them uniformly. In this case, Docker Swarm is used to manage multiple services as a single virtual system, simplifying the process of deploying and managing complex applications. Docker Swarm allows you to easily scale your applications up or down by adding or removing Docker engines from the cluster, and it provides built-in load balancing and enhanced security features. (We can also use Kubernetes (K8s) to manage multiple services as a single system.)</p>
+<p>Through the concept of <em>Manager</em> and <em>Worker</em>, multiple machines can be managed, and the <em>Manager</em> can be used to manage all services centrally, including updating services, deploying services, viewing logs, etc., making it very convenient; it is also paired with the <em>portainer</em> UI for management and monitoring.</p>
+<p>As we can see in the picture below, there are two machines (nodes) in the cluster</p>
+<p><img src="/images/post/portainer_swarm.jpg" alt="Portainer_swarm"></p>
+<p>Manage all services from a single interface.</p>
+<p><img src="/images/post/portainer_services.jpg" alt="Portainer_services"></p>
+<h3 id="ddns--ssl">DDNS &amp; SSL</h3>
+<p>To ensure your API is publicly accessible, assigning a URL is essential. Commonly, this involves purchasing a domain name from registrars like <a href="https://www.domcomp.com/">domcomp</a>, where you can explore availability and pricing.</p>
+<p>For a cost-effective alternative, consider using a free Dynamic DNS (DDNS) service, such as <a href="https://www.noip.com/">No-IP</a>. DDNS allows you to establish a domain name that dynamically updates to match your API&rsquo;s IP address, even as it changes. Bear in mind, regular monthly renewals of the domain name are necessary to maintain its active status.</p>
+<p><img src="/images/post/noip.jpg" alt="no-ip"></p>
+<p>Further securing your API, implementing SSL (Secure Sockets Layer) is crucial. SSL certificates, like the complimentary one from <em>Let&rsquo;s Encrypt</em> used in this project, establish a secure connection between browsers and servers. Upon successful installation, a browser displays an HTTPS symbol next to your URL, signifying a secure connection.</p>
+<p>The management of SSL certificates, URL, DNS, load balancing, and their automatic renewal is streamlined through <a href="https://traefik.io/">Traefik</a>, a tool adept in reverse proxying and Docker integration.</p>
+<p><img src="/images/post/traefik.jpg" alt="traefik"></p>
+<p>Source: <a href="https://traefik.io/">Traefik</a></p>
+<p>Below is the Traefik v2 dashboard, showcasing its management capabilities.</p>
+<p><img src="/images/post/traefik_dashboard.jpg" alt="traefik_dashboard"></p>
+<h3 id="cicd">CI/CD</h3>
+<p>The integration of CI/CD (Continuous Integration/Continuous Deployment) tools is a pivotal element in modern project development. These tools automate the testing and deployment processes, substantially mitigating error risks. In this project, we&rsquo;ve harnessed the capabilities of <em>GitLab CI/CD</em>. The <em>Specific runners</em> in GitLab are configured to execute CI/CD commands efficiently.</p>
+<p>The CI/CD pipeline is triggered by a merge request in our setup. Once initiated, the CI process commences, encompassing automated testing, Docker image construction, and subsequent upload to Docker Hub. The deployment phase (CD) is activated upon the creation of a new tag, facilitating the service deployment to Docker Swarm.</p>
+<p>Tools akin to GitLab CI/CD, like <em>CircleCI</em> and <em>GitHub Actions</em>, offer similar functionalities. However, GitLab&rsquo;s distinct advantage lies in its open-source nature, allowing free on-premises deployment.</p>
+<p>The API repository demonstrates a typical CI/CD flow: <em>test -&gt; build -&gt; deploy</em>.</p>
+<p><img src="/images/post/gitlab_ci.jpg" alt="gitlab_ci"></p>
+<p>An integral metric in CI processes is test coverage, denoting the proportion of the codebase that undergoes testing. This is crucial for ensuring code reliability and robustness.</p>
+<p><img src="/images/post/test_coverage.jpg" alt="test_coverage"></p>
+<h3 id="monitoring">Monitoring</h3>
+<p>Post-deployment, monitoring becomes critical to ensure that each service operates as intended and the performance of the infrastructure aligns with expectations. For this purpose, <em>Prometheus</em> stands out as a robust tool for collecting time-series data. It seamlessly integrates with <em>Traefik</em> and <em>Node-Exporter</em>, facilitating comprehensive data gathering.</p>
+<p>The collated data is then elegantly visualized using a <em>Grafana</em> dashboard. This visual representation aids in understanding and analyzing the performance metrics and operational status of the services and the underlying machines.</p>
+<p><img src="/images/post/grafana_traefik.jpg" alt="grafana_traefik">
+Source: <a href="https://grafana.com/grafana/dashboards/12250">Traefik2.2 Dashboard on Grafana</a></p>
+<p>In our current setup, we are utilizing two machines, hence the node count is displayed as 2. This number provides a quick insight into the scale of our infrastructure being monitored.</p>
+<p><img src="/images/post/grafana_node.jpg" alt="grafana_node">
+Source: <a href="https://grafana.com/grafana/dashboards/11074">Node Exporter for Prometheus Dashboard EN on Grafana</a></p>
+<h3 id="result">Result</h3>
+<ul>
+<li>
+<p><strong>Data API</strong>
+<a href="https://bit.ly/3gGBTUX">https://bit.ly/3gGBTUX</a></p>
+</li>
+<li>
+<p><strong>Dashboard</strong>
+Insightful analysis of daily job postings, average salaries, and job description word clouds.</p>
+</li>
+</ul>
+<p><img src="/images/post/dashboard.jpg" alt="dashboard"></p>
+<h3 id="additional-resources">Additional Resources</h3>
+<ul>
+<li><a href="https://www.books.com.tw/products/0010907880">Python 大數據專案 X 工程 X 產品 資料工程師的升級攻略</a></li>
+<li><a href="https://docs.celeryq.dev/en/stable/">Celery - Distributed Task Queue</a></li>
+</ul>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/projects">Projects</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

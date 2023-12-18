@@ -13,11 +13,11 @@
     
     <item>
       <title>Project - ML Model Deployment</title>
-      <link>https://bruceewue.github.io/blog/ml_deployment/</link>
+      <link>https://bruceewue.github.io/blog/project-ml-model-deployment/</link>
       <pubDate>Fri, 03 Dec 2021 10:07:47 +0600</pubDate>
       
-      <guid>https://bruceewue.github.io/blog/ml_deployment/</guid>
-      <description>After learning machine learning and data analysis methods, I can&amp;rsquo;t help but think: what&amp;rsquo;s next?</description>
+      <guid>https://bruceewue.github.io/blog/project-ml-model-deployment/</guid>
+      <description>Table of Contents  Table of Contents  Data Source Model Deployment End-to-End ML System Productionising the Model Deployment via API  Why Docker for ML?</description>
     </item>
     
   </channel>
