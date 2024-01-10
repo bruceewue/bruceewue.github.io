@@ -3,42 +3,57 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://bruceewue.github.io/blog/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/dashboard/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/gcp/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/project/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/blog/project-london-cycling-analytics/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/categories/projects/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://bruceewue.github.io/tags/</loc>
+    <lastmod>2024-01-10T01:07:47+06:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://bruceewue.github.io/tags/aws/</loc>
     <lastmod>2023-11-26T10:07:47+06:00</lastmod>
   </url>
   
   <url>
-    <loc>https://bruceewue.github.io/blog/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/categories/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/project/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://bruceewue.github.io/blog/project-building-a-small-project-with-aws/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/categories/projects/</loc>
-    <lastmod>2023-11-26T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/</loc>
     <lastmod>2023-11-26T10:07:47+06:00</lastmod>
   </url>
   
@@ -69,11 +84,6 @@
   
   <url>
     <loc>https://bruceewue.github.io/tags/dezoomcamp/</loc>
-    <lastmod>2023-03-02T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/gcp/</loc>
     <lastmod>2023-03-02T10:07:47+06:00</lastmod>
   </url>
   
@@ -120,11 +130,6 @@
   <url>
     <loc>https://bruceewue.github.io/tags/automl/</loc>
     <lastmod>2022-03-01T10:07:47+06:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://bruceewue.github.io/tags/dashboard/</loc>
-    <lastmod>2022-02-04T10:07:47+06:00</lastmod>
   </url>
   
   <url>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-tw"><head>
+  <meta charset="utf-8">
+  <title>Bruce Wu&#39;s Blog</title>
+
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description"
+    content="Unravel the complexities of London&#39;s cycling dynamics through our data engineering project. We analyze TfL&#39;s cycling data to bring you insightful trends and patterns.">
+  
+  <meta name="author" content="Bruce Wu">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  <!-- plugins -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/slick/slick.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/themify-icons/themify-icons.css ">
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/plugins/venobox/venobox.css ">
+  
+
+  <!-- Main Stylesheet -->
+  
+  <link rel="stylesheet" href="https://bruceewue.github.io/scss/style.min.css" media="screen">
+
+  <!--Favicon-->
+  <link rel="shortcut icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+  <link rel="icon" href="https://bruceewue.github.io/images/favicon.png " type="image/x-icon">
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2F00WBD4QD"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-2F00WBD4QD');
+  </script>
+</head><body>
+<!-- preloader start -->
+<div class="preloader">
+  
+</div>
+<!-- preloader end -->
+<!-- navigation -->
+<header class="navigation">
+  <div class="container">
+    
+    <nav class="navbar navbar-expand-lg navbar-white bg-transparent border-bottom ">
+      <a class="navbar-brand" href="https://bruceewue.github.io"><span class="text-body">Bruce Wu&#39;s Blog</span></a>
+
+      
+          
+          
+      <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navigation">
+        <i class="ti-menu h3"></i>
+      </button>
+
+      <div class="collapse navbar-collapse text-center" id="navigation">
+        
+
+        
+            
+        <ul class="navbar-nav ml-auto">
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/">Home</a>
+          </li>
+          
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="https://bruceewue.github.io/about">About</a>
+          </li>
+          
+          
+        </ul>
+
+        
+        <!-- search -->
+        <div class="search pl-lg-4">
+          <button id="searchOpen" class="search-btn"><i class="ti-search"></i></button>
+          <div class="search-wrapper">
+            <form action="https://bruceewue.github.io/search" class="h-100">
+              <input class="search-box px-4" id="search-query" name="s" type="search" placeholder="Type & Hit Enter...">
+            </form>
+            <button id="searchClose" class="search-close"><i class="ti-close text-dark"></i></button>
+          </div>
+        </div>
+        
+
+        
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- /navigation -->
+
+<section class="section-sm">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-10 mx-auto">
+        
+        <a href="/categories/projects"
+          class="text-primary">Projects</a>
+        
+        <h2>Project - London Cycling Analytics</h2>
+        <div class="mb-3 post-meta">
+          <span>By Bruce Wu</span>
+          
+          <span class="border-bottom border-primary px-2 mx-1"></span>
+          <span>10 January 2024</span>
+          
+        </div>
+        
+        <div class="content mb-5">
+          <h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#the-essence-of-tfls-cycling-data"><strong>The Essence of TFL&rsquo;s Cycling Data</strong></a></li>
+<li><a href="#the-architectural-blueprint"><strong>The Architectural Blueprint</strong></a></li>
+<li><a href="#the-dashboard-a-window-to-cycling-trends"><strong>The Dashboard: A Window to Cycling Trends</strong></a></li>
+<li><a href="#setting-the-stage-pipeline-implementation"><strong>Setting the Stage: Pipeline Implementation</strong></a></li>
+</ul>
+<p>To optimize the provided blog content on &ldquo;London&rsquo;s TFL cycling data pipeline&rdquo;, I suggest several enhancements for SEO and reader engagement. Here&rsquo;s the revised blog in Markdown format:</p>
+<hr>
+<h1 id="londons-tfl-cycling-data-pipeline-a-comprehensive-data-engineering-project">London&rsquo;s TFL Cycling Data Pipeline: A Comprehensive Data Engineering Project</h1>
+<p>Understanding urban cycling trends is crucial for developing efficient and sustainable city transportation systems. In this blog, we delve into a cutting-edge data engineering project that utilizes London&rsquo;s Transport for London (TfL) cycling data to unravel the intricacies of cycling patterns in this bustling metropolis.</p>
+<h2 id="data-set-a-closer-look">Data Set: A Closer Look</h2>
+<p>The data, sourced from <a href="https://cycling.data.tfl.gov.uk/">TfL&rsquo;s Cycling Data</a>, comprises comprehensive CSV-formatted records. Here&rsquo;s a snapshot of the data structure:</p>
+<table>
+<thead>
+<tr>
+<th>Column Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rental Id</td>
+<td>A distinct identifier for each ride</td>
+</tr>
+<tr>
+<td>Duration</td>
+<td>The length of time the ride lasts</td>
+</tr>
+<tr>
+<td>Bike Id</td>
+<td>A distinct identifier for the bicycle</td>
+</tr>
+<tr>
+<td>End Date</td>
+<td>The time at which the ride ended</td>
+</tr>
+<tr>
+<td>EndStation Id</td>
+<td>A distinct identifier for the destination station</td>
+</tr>
+<tr>
+<td>EndStation Name</td>
+<td>The name of the station where the ride ends</td>
+</tr>
+<tr>
+<td>Start Date</td>
+<td>The time at which the ride started</td>
+</tr>
+<tr>
+<td>StartStation Id</td>
+<td>A distinct identifier for the origin station</td>
+</tr>
+<tr>
+<td>StartStation Name</td>
+<td>The name of the station where the ride begins</td>
+</tr>
+</tbody>
+</table>
+<h2 id="pipeline-overview-integrating-advanced-tools-and-technologies">Pipeline Overview: Integrating Advanced Tools and Technologies</h2>
+<p><img src="images/post/tfl_cycle_de/system_pipeline.png" alt="System Pipeline"></p>
+<p>Our project harnesses a plethora of sophisticated tools and technologies to forge a robust end-to-end data engineering pipeline:</p>
+<ol>
+<li><strong>Google Cloud Platform (GCP)</strong>: The backbone for data storage, processing, and analytics.</li>
+<li><strong>Google Cloud Storage (GCS)</strong>: Our data lake for raw and processed datasets.</li>
+<li><strong>Google Cloud Dataproc</strong>: A powerhouse for fast data processing via Apache Spark and Hadoop.</li>
+<li><strong>BigQuery</strong>: A serverless, scalable data warehouse tailor-made for analytics.</li>
+<li><strong>Terraform</strong>: Orchestrating GCP resources with Infrastructure as Code (IaC).</li>
+<li><strong>Apache Airflow</strong>: The conductor for our data pipelines.</li>
+<li><strong>PySpark</strong>: Python&rsquo;s gift to big data processing with Apache Spark.</li>
+<li><strong>Looker Studio</strong>: Where data transforms into interactive visual stories.</li>
+</ol>
+<h3 id="the-pipeline-in-action-steps-for-streamlined-data-processing">The Pipeline in Action: Steps for Streamlined Data Processing</h3>
+<p>a. <strong>Data Ingestion</strong>:</p>
+<ul>
+<li>Implementation of Apache Airflow for scheduling and automating data ingestion.</li>
+<li>Conversion of CSV files to Parquet format for efficiency, stored in GCS.</li>
+</ul>
+<p><img src="images/post/tfl_cycle_de/airflow_task.png" alt="Airflow Task"></p>
+<p>b. <strong>Data Transformation</strong>:</p>
+<ul>
+<li>Utilization of PySpark and Google Cloud Dataproc for cleaning, filtering, and aggregating data.</li>
+</ul>
+<p>c. <strong>Data Storage</strong>:</p>
+<ul>
+<li>Leveraging Google BigQuery for storing transformed data, enabling real-time analytics.</li>
+</ul>
+<p>d. <strong>Data Visualization</strong>:</p>
+<ul>
+<li>Employing Looker Studio for crafting interactive dashboards, providing profound insights into London&rsquo;s cycling trends.</li>
+</ul>
+<h2 id="interactive-dashboard-visualizing-insights">Interactive Dashboard: Visualizing Insights</h2>
+<p>A comprehensive dashboard, designed in Looker Studio, brings data-driven narratives to life, aiding stakeholders in informed decision-making.</p>
+<p><a href="https://lookerstudio.google.com/reporting/a56e8e4e-1648-4819-9e41-34aa22c22b07">Dashboard Link</a></p>
+<p><img src="images/post/tfl_cycle_de/dashboard.png" alt="Dashboard"></p>
+<h2 id="setting-up-the-pipeline-your-step-by-step-guide">Setting Up the Pipeline: Your Step-by-Step Guide</h2>
+<ol>
+<li>
+<p><strong>Repository Cloning</strong>:<br>
+Start by cloning the GitHub repository:<br>
+<code>git clone https://github.com/bruceewue/de_zoomcamp_tfl_cycling.git</code></p>
+</li>
+<li>
+<p><strong>Google Cloud Platform Setup</strong>:<br>
+Create a new project and authenticate your account with the Google Cloud SDK.</p>
+</li>
+<li>
+<p><strong>Terraform Initialization</strong>:<br>
+Install Terraform and initialize the configuration to set up GCP resources.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">terraform init 
+terraform plan 
+terraform apply
+</code></pre></div></li>
+<li>
+<p><strong>Apache Airflow Configuration</strong>:<br>
+Customize your docker-compose.yml with GCP Project ID and GCS bucket information.</p>
+<p><a href="https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/cohorts/2022/week_2_data_ingestion/airflow/1_setup_official.md">Airflow Setup Reference</a></p>
+<p>Next, open your web browser and navigate to the Airflow web server URL: http://localhost:8080, and manually trigger a task run, click the play button located next to the DAG name Once your DAG runs successfully, you will see that the Parquet files have been stored in your data lake, which is located in Google Cloud Storage (GCS).</p>
+</li>
+<li>
+<p><strong>PySpark &amp; Dataproc Activation</strong>:<br>
+Enable the Dataproc API, create a cluster, and execute PySpark jobs for data transformation.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#388038">cd</span> spark
+<span style="color:#888;font-style:italic"># Upload PySpark file to GCS</span>
+gsutil cp spark_sql_big_query.py gs://GCP_GCS_BUCKET/code/spark_sql_big_query.py
+<span style="color:#888;font-style:italic"># Submit a PySpark job</span>
+gcloud dataproc <span style="color:#388038">jobs</span> submit pyspark<span style="color:#709030">\
+</span><span style="color:#709030"></span>   --cluster<span style="color:#666">=</span>YOUR_CLUSTER <span style="color:#709030">\
+</span><span style="color:#709030"></span>   --region<span style="color:#666">=</span>europe-west1
+   --jars<span style="color:#666">=</span>gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar gs://cycling_data_lake_cycling-uk/code/spark_sql_big_query.py <span style="color:#709030">\
+</span><span style="color:#709030"></span>   -- <span style="color:#709030">\
+</span><span style="color:#709030"></span>     --input<span style="color:#666">=</span>gs://GCP_GCS_BUCKET/raw/<span style="color:#709030">\
+</span><span style="color:#709030"></span>     --output<span style="color:#666">=</span>YOUR_BIGQUERY_TABLE
+</code></pre></div></li>
+</ol>
+<p>Once the PySpark job completes successfully, the transformed data will be stored in the specified BigQuery table.</p>
+
+        </div>
+
+        
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "bruceewue" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-12 text-center mb-5">
+        
+        <a href="https://bruceewue.github.io"></a>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Contact Me</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><i class="ti-location-pin mr-3 text-primary"></i>United Kingdom</li>
+          <li class="mb-3"><a class="text-dark" href="mailto:bruceewue@gmail.com"><i
+                class="ti-email mr-3 text-primary"></i>bruceewue@gmail.com</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5" >
+        <h6 class="mb-4">Social Contacts</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://github.com/bruceewue">github</a></li>
+          
+          <li class="mb-3"><a class="text-dark" href="https://www.linkedin.com/in/kuang-yu-wu">linkedin</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Categories</h6>
+        <ul class="list-unstyled">
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/data-engineering">Data engineering</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/machine-learning">Machine learning</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/others">Others</a>
+          </li>
+          <li class="mb-3"><a class="text-dark"
+              href="/categories/projects">Projects</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-sm-6 mb-5">
+        <h6 class="mb-4">Quick Links</h6>
+        <ul class="list-unstyled">
+          
+          <li class="mb-3"><a class="text-dark" href="https://bruceewue.github.io/about">About</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-12 border-top py-4 text-center">
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script>
+  var indexURL = "https://bruceewue.github.io/index.json"
+</script>
+<!-- JS Plugins -->
+
+<script src="https://bruceewue.github.io/plugins/jQuery/jquery.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/bootstrap/bootstrap.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/slick/slick.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/venobox/venobox.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/fuse.min.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/mark.js"></script>
+
+<script src="https://bruceewue.github.io/plugins/search/search.js"></script>
+
+<!-- Main Script -->
+
+<script src="https://bruceewue.github.io/js/script.min.js"></script>
+<!-- google analitycs -->
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

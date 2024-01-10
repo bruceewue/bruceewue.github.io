@@ -6,10 +6,19 @@
     <description>Recent content in Projects on Bruce Wu&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-tw</language>
-    <lastBuildDate>Sun, 26 Nov 2023 10:07:47 +0600</lastBuildDate>
+    <lastBuildDate>Wed, 10 Jan 2024 01:07:47 +0600</lastBuildDate>
     
 	<atom:link href="https://bruceewue.github.io/categories/projects/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Project - London Cycling Analytics</title>
+      <link>https://bruceewue.github.io/blog/project-london-cycling-analytics/</link>
+      <pubDate>Wed, 10 Jan 2024 01:07:47 +0600</pubDate>
+      
+      <guid>https://bruceewue.github.io/blog/project-london-cycling-analytics/</guid>
+      <description>Table of Contents  The Essence of TFL&amp;rsquo;s Cycling Data The Architectural Blueprint The Dashboard: A Window to Cycling Trends Setting the Stage: Pipeline Implementation  To optimize the provided blog content on &amp;ldquo;London&amp;rsquo;s TFL cycling data pipeline&amp;rdquo;, I suggest several enhancements for SEO and reader engagement.</description>
+    </item>
     
     <item>
       <title>Project - Building a small project with AWS</title>
