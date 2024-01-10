@@ -179,7 +179,7 @@
 </tbody>
 </table>
 <h2 id="pipeline-overview-integrating-advanced-tools-and-technologies">Pipeline Overview: Integrating Advanced Tools and Technologies</h2>
-<p><img src="images/post/tfl_cycle_de/system_pipeline.png" alt="System Pipeline"></p>
+<p><img src="/images/post/tfl_cycle_de/system_pipeline.png" alt="System Pipeline"></p>
 <p>Our project harnesses a plethora of sophisticated tools and technologies to forge a robust end-to-end data engineering pipeline:</p>
 <ol>
 <li><strong>Google Cloud Platform (GCP)</strong>: The backbone for data storage, processing, and analytics.</li>
@@ -197,7 +197,7 @@
 <li>Implementation of Apache Airflow for scheduling and automating data ingestion.</li>
 <li>Conversion of CSV files to Parquet format for efficiency, stored in GCS.</li>
 </ul>
-<p><img src="images/post/tfl_cycle_de/airflow_task.png" alt="Airflow Task"></p>
+<p><img src="/images/post/tfl_cycle_de/airflow_task.png" alt="Airflow Task"></p>
 <p>b. <strong>Data Transformation</strong>:</p>
 <ul>
 <li>Utilization of PySpark and Google Cloud Dataproc for cleaning, filtering, and aggregating data.</li>
@@ -213,7 +213,7 @@
 <h2 id="interactive-dashboard-visualizing-insights">Interactive Dashboard: Visualizing Insights</h2>
 <p>A comprehensive dashboard, designed in Looker Studio, brings data-driven narratives to life, aiding stakeholders in informed decision-making.</p>
 <p><a href="https://lookerstudio.google.com/reporting/a56e8e4e-1648-4819-9e41-34aa22c22b07">Dashboard Link</a></p>
-<p><img src="images/post/tfl_cycle_de/dashboard.png" alt="Dashboard"></p>
+<p><img src="/images/post/tfl_cycle_de/dashboard.png" alt="Dashboard"></p>
 <h2 id="setting-up-the-pipeline-your-step-by-step-guide">Setting Up the Pipeline: Your Step-by-Step Guide</h2>
 <ol>
 <li>
@@ -254,7 +254,7 @@ gcloud dataproc <span style="color:#388038">jobs</span> submit pyspark<span styl
 </span><span style="color:#709030"></span>     --output<span style="color:#666">=</span>YOUR_BIGQUERY_TABLE
 </code></pre></div></li>
 </ol>
-<p>Once the PySpark job completes successfully, the transformed data will be stored in the specified BigQuery table.</p>
+<p>Once the PySpark job is completed successfully, the transformed data will be stored in the specified BigQuery table.</p>
 
         </div>
 
